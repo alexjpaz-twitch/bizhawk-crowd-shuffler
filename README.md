@@ -1,0 +1,1 @@
+# bizhawk-crowd-shuffler
