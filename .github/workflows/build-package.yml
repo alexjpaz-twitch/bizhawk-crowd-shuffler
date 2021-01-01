@@ -31,3 +31,12 @@ jobs:
       with:
         filename: 'release.zip'
         exclusions: '*.git* /*node_modules/* .editorconfig package.json *.js'
+    - name: Upload
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: 'release.zip'
+        asset_name: bizhawk-crowd-shuffler-${{ github.event.release.tag_name }}-linux-x86_64
+        asset_content_type: binary/octet-stream
