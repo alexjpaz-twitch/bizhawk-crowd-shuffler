@@ -41,14 +41,13 @@ jobs:
         release_name: Release ${{ github.ref }}
         draft: false
         prerelease: false
-
-	- name: Upload Release Asset
-	  id: upload-release-asset 
-	  uses: actions/upload-release-asset@v1
-	  env:
-		GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-	  with:
-		upload_url: ${{ steps.create_release.outputs.upload_url }}
-		asset_path: ./release.zip
+    - name: Upload Release Asset
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./release.zip
         asset_name: bizhawk-crowd-shuffler-${{ github.event.release.tag_name }}-linux-x86_64
-		asset_content_type: application/zip
+        asset_content_type: application/zip
