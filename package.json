@@ -5,12 +5,13 @@
   "main": "index.js",
   "dependencies": {
     "comfy.js": "^1.1.6",
+    "open": "^7.3.0",
     "pkg": "^4.4.9"
   },
   "devDependencies": {},
   "scripts": {
-      "test": "echo no tests",
-      "package": "pkg bin/bizhawk-crowd-shuffler --out-path=dist/"
+    "test": "echo no tests",
+    "package": "pkg -t node14-win-x64 bin/bizhawk-crowd-shuffler --out-path=./"
   },
   "keywords": [],
   "author": "",

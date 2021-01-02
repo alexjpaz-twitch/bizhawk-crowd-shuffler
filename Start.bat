@@ -1,3 +1,6 @@
-start Start_BizHawk_Listen_To_Crowd_Shuffler.bat
-start Start_Crowd_Shuffler_Server.bat
-pause
+SET HOST=127.0.0.1
+SET PORT=7070
+SET CHANNEL=alexjpaz
+SET BIZHAWK_PATH=..\\
+start bizhawk-crowd-shuffler-win.exe
+
