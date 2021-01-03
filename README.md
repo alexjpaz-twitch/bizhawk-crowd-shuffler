@@ -1,37 +1,54 @@
 # bizhawk-crowd-shuffler
 
-> A script for Bizhawk to allow Twitch chat to shuffle the ROM 
+> A script for Bizhawk to allow Twitch chat to shuffle the current ROM 
 
 ## Setup
 
 1. Install the [latest development version](https://ci.appveyor.com/project/zeromus/bizhawk-udexo/build/artifacts) of BizHawk (> 2.5.3)
 
-2. Download the latest release of [bizhawk-crowd-shuffler](https://github.com/alexjpaz-twitch/bizhawk-crowd-shuffler/releases)
+2. Download the latest release of this project [bizhawk-crowd-shuffler](https://github.com/alexjpaz-twitch/bizhawk-crowd-shuffler/releases).
 
-3. Unzip bizhawk-crowd-shuffler inside of the folder that BizHawk is installed in from step 1
+3. Unzip `bizhawk-crowd-shuffler` inside of the folder that BizHawk is installed in from step 1
+
+4. Open the `bizhawk-crowd-shuffler` folder and copy any roms that you want shuffled into the `CurrenRoms` folder 
+
+5. Edit the `Start.bat` to fill in the `CHANNEL` with your Twitch channel name.
+
 
 ## Advanced Setup
 
-### Aquiring an OAuth Token
+If you would like the shuffler to be able to respond with the next rom in chat and/or users to use reward redemptions to swap you will  need to do aquire an OAuth Token.
+
+### Acquiring an OAuth Token
+
+1. Navtivate to https://dev.twitch.tv/console/apps/create
+
+2. Enter a name for the application (e.g. MyUserNameRomShuffler)
+
+3. Enter `https://twitchapps.com/tokengen/` for the *OAuth Redirect URLs* field
+
+4. Click *create*
+
+5. Click *manage* next to your newly created application
+
+6. Copy the value in the *clientID* field 
+
+7. Navigate to https://twitchapps.com/tokengen/
+
+8. Enter your *clientID* from step 6
+
+9. Enter the following scopes string in to the scopes field
 
 ```
 channel:manage:redemptions channel:read:redemptions user:read:email chat:edit chat:read
 ```
 
-## Using Reward Redemptions
+10. Copy the OAuth token into the `Start.bat` file in the `TWITCH_TOKEN` field
 
-https://twitchapps.com/tokengen/
+11. Create redemption named "swap"
 
-
-## Contributing
-
-```
-npm i
-```
+**Note:** There is a [current limiation](https://github.com/alexjpaz-twitch/bizhawk-crowd-shuffler/issues/9) that you *must* name the redemption swap.
 
 
-```
-npm run package
-```
-
-
+## Miscellaneous
+### [Contributing](./CONTRIBUTING.md)
