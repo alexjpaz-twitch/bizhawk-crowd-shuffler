@@ -2,6 +2,8 @@
 
 > A script for Bizhawk to allow Twitch chat to shuffle the current ROM 
 
+![Shuffler Demo](/examples/demo_gifs/bizhawk-crowd-shuffler.gif)
+
 ## Setup
 
 1. Install the [latest development version](https://ci.appveyor.com/project/zeromus/bizhawk-udexo/build/artifacts) of BizHawk (> 2.5.3)
