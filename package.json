@@ -10,6 +10,7 @@
   },
   "devDependencies": {},
   "scripts": {
+    "start": "node index.js",
     "test": "echo no tests",
     "package": "pkg -t node14-win-x64 bin/bizhawk-crowd-shuffler --out-path=./"
   },

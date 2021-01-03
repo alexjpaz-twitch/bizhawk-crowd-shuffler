@@ -1,5 +1,9 @@
+const assert = require('assert');
 const chalk = require('chalk');
+
 const logger = console;
+
+console.log = (e) => console.info(chalk.cyan(e));
 
 const open = require('open');
 const net = require('net');
@@ -12,46 +16,136 @@ const channel = process.env.CHANNEL;
 
 const bizhawkPath = process.env.BIZHAWK_PATH;
 
+const twitchToken = process.env.TWITCH_TOKEN;
+
 const server = net.createServer();
+
+const fs = require('fs').promises;
+
+const precondition = (expression, message) => {
+  try {
+    assert(expression)
+  } catch(e) {
+    const error = new Error(message || e.message);
+    throw error;
+  }
+}
 
 const startBizhawk = (port, host) => {
   // TODO
-  open('Start_BizHawk_Listen_To_Crowd_Shuffler.bat');
+  const isWin = process.platform === "win32";
+  if(isWin) {
+    open('Start_BizHawk_Listen_To_Crowd_Shuffler.bat');
+    logger.info(chalk.green("Bizhawk started"));
+  } else {
+    logger.error(chalk.yellow("Script not run in Windows. Starting the BizHawk process is a no-op"));
+  }
 };
 
-server.listen(port, host, () => {
+const main = () => {
+  precondition(channel, "channel must be provided");
+  precondition(port, "port must be provided");
+  precondition(host, "host must be provided");
 
-  startBizhawk(port, host);
+  logger.info(chalk.blue(`TCP Server is starting on ${host} ${port}`));
 
-  let sockets = [];
+  server.listen(port, host, () => {
 
+    logger.info(chalk.green(`Shuffler Server Started`));
 
+    startBizhawk(port, host);
 
-  server.on('connection', function(sock) {
-    sockets.push(sock);
+    let sockets = [];
 
-    sock.on('close', function(data) {
-      let index = sockets.findIndex(function(o) {
-        return o.remoteAddress === sock.remoteAddress && o.remotePort === sock.remotePort;
-      })
-      if (index !== -1) sockets.splice(index, 1);
-      console.log('CLOSED: ' + sock.remoteAddress + ' ' + sock.remotePort);
+    server.on('connection', function(sock) {
+      sockets.push(sock);
+
+      const ping = () => {
+        sockets.forEach((sock) => {
+          sock.write("ping\n");
+        });
+
+        setTimeout(ping, 2000);
+      };
+
+      ping();
+
+      sock.on('close', function(data) {
+        let index = sockets.findIndex(function(o) {
+          return o.remoteAddress === sock.remoteAddress && o.remotePort === sock.remotePort;
+        })
+        if (index !== -1) sockets.splice(index, 1);
+        console.log('CLOSED: ' + sock.remoteAddress + ' ' + sock.remotePort);
+      });
     });
+
+    let state = {
+      currentRom: null,
+    };
+
+    server.on('data', function(data) {
+      logger.info(chalk.purple(data));
+    });
+
+    const switchRom = (rom) => {
+      if(!rom) {
+        return;
+      }
+      const romName = rom.replace(/\./g, '_');
+      ComfyJS.Say(`/me Swapping to "${romName}"`);
+      sockets.forEach((sock) => {
+        sock.write(`switchRom\t${rom}\n`);
+      });
+    };
+
+    const swap = async (index) => {
+      try {
+        let roms = await fs.readdir("CurrentRoms");
+        console.log(index);
+
+        if(index) {
+          roms = roms
+            .filter((rom) => rom.startsWith(index));
+        } else {
+          roms = roms
+            .filter((rom) => rom !== state.currentRom)
+            .filter((rom) => rom !== 'DeleteMe');
+        }
+
+        const rom = roms[Math.floor(Math.random() * roms.length)];
+        state.currentRom = rom;
+
+        switchRom(state.currentRom);
+      } catch(e) {
+        logger.error(e);
+      }
+    };
+
+    ComfyJS.onCommand = ( user, command, message, flags, extra ) => {
+      if(command === 'swap') {
+        swap(message);
+      }
+    }
+
+    ComfyJS.onReward = ( user, reward, cost, extra ) => {
+      if(reward === 'swap') {
+        swap(extra);
+      }
+    }
+
+    logger.info(chalk.blue(`Connecting to twitch channel ${channel}`));
+
+    if(!twitchToken) {
+      logger.warn(chalk.yellow("No twitch token provided. Chat response and reward responses will not be enabled."));
+    }
+
+    ComfyJS.onConnected = () => {
+      logger.info(chalk.green("Connected to twitch", channel));
+    }
+
+    ComfyJS.Init(channel, twitchToken);
   });
 
-  ComfyJS.onCommand = ( user, command, message, flags, extra ) => {
-    console.log(user, command, message);
+}
 
-    // TODO - user level checks, last command sent, points, etc
-    sockets.forEach((sock) => {
-      sock.write(command);
-    });
-  }
-
-  logger.info(`Connecting to twitch channel ${channel}`);
-  ComfyJS.Init(channel);
-
-  console.log(`TCP Server is running on ${host} ${port}`);
-});
-
-
+main();

@@ -10,6 +10,17 @@
 
 3. Unzip bizhawk-crowd-shuffler inside of the folder that BizHawk is installed in from step 1
 
+## Advanced Setup
+
+### Aquiring an OAuth Token
+
+```
+channel:manage:redemptions channel:read:redemptions user:read:email chat:edit chat:read
+```
+
+## Using Reward Redemptions
+
+https://twitchapps.com/tokengen/
 
 
 ## Contributing
