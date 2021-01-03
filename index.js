@@ -62,7 +62,7 @@ const main = () => {
 
       const ping = () => {
         sockets.forEach((sock) => {
-          sock.write("ping");
+          sock.write("ping\n");
         });
 
         setTimeout(ping, 2000);
@@ -88,20 +88,31 @@ const main = () => {
     });
 
     const switchRom = (rom) => {
-      ComfyJS.Say(`/me Swapping to "${rom}"`);
+      if(!rom) {
+        return;
+      }
+      const romName = rom.replace(/\./g, '_');
+      ComfyJS.Say(`/me Swapping to "${romName}"`);
       sockets.forEach((sock) => {
-        sock.write(`switchRom\t${rom}`);
+        sock.write(`switchRom\t${rom}\n`);
       });
     };
 
     const swap = async (index) => {
       try {
         let roms = await fs.readdir("CurrentRoms");
+        console.log(index);
 
-        roms = roms.filter((rom) => rom !== state.currentRom);
+        if(index) {
+          roms = roms
+            .filter((rom) => rom.startsWith(index));
+        } else {
+          roms = roms
+            .filter((rom) => rom !== state.currentRom)
+            .filter((rom) => rom !== 'DeleteMe');
+        }
 
         const rom = roms[Math.floor(Math.random() * roms.length)];
-
         state.currentRom = rom;
 
         switchRom(state.currentRom);
@@ -117,7 +128,7 @@ const main = () => {
     }
 
     ComfyJS.onReward = ( user, reward, cost, extra ) => {
-      if(command === 'swap') {
+      if(reward === 'swap') {
         swap(extra);
       }
     }

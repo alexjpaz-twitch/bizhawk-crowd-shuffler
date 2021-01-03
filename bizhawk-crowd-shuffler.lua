@@ -36,24 +36,25 @@ function commands.ping()
 end
 
 local function parseAndExecuteResponse(response)
-    -- print("DEBUG: response=" .. response)
-    local t={}
+    for line in string.gmatch(response, "([^\n]+)") do
+        local t={}
 
-    for str in string.gmatch(response, "([^\t]+)") do
-        table.insert(t, str)
-    end
+        for str in string.gmatch(line, "([^\t]+)") do
+            table.insert(t, str)
+        end
 
-    local input = {
-        command = t[1],
-        args = t[2]
-    }
+        local input = {
+            command = t[1],
+            args = t[2]
+        }
 
-    -- print("DEBUG: command=" .. input.command)
+        -- print("DEBUG: command=" .. input.command)
 
-    local command = commands[input.command]
+        local command = commands[input.command]
 
-    if(command) then
-        commands[input.command](input.args)
+        if(command) then
+            commands[input.command](input.args)
+        end
     end
 end
 
@@ -80,4 +81,3 @@ end
 if emu then
     main()
 end
-
