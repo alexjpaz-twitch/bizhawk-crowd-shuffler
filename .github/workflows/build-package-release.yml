@@ -30,7 +30,7 @@ jobs:
       uses: thedoctor0/zip-release@master
       with:
         filename: 'release.zip'
-        exclusions: '*.git* /*node_modules/* .editorconfig package.json *.js'
+        exclusions: '*.git* /*node_modules/* .editorconfig package.json package-lock.json'
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
