@@ -17,6 +17,7 @@
 5. Edit the `Start.bat` to fill in the `CHANNEL` with your Twitch channel name.
 
 **Note:** You may have a popup saying "Windows protected your PC". Click *more info* and click "Run anyway"
+
 **Note:** You may have a popup about the "Windows Firewall". You will need to allow access for the applications to work.
 
 
