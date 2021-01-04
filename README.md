@@ -53,7 +53,28 @@ channel:manage:redemptions channel:read:redemptions user:read:email chat:edit ch
 
 11. Create redemption named "swap"
 
-**Note:** There is a [current limiation](https://github.com/alexjpaz-twitch/bizhawk-crowd-shuffler/issues/9) that you *must* name the redemption swap.
+## Configuration
+
+The shuffler can be configured by adding a `config.json` file (an example is provided)
+
+#### chatCommand
+
+> Configures the chat command (e.g !swap) to respond to (default: ^swap$ 
+
+#### redemptionName
+
+> Configures the redpemption name to respond to (default: ^swap$)
+
+#### randomOnly
+
+> Ignore any user filter and just uses a random rom
+
+#### chatCooldownGlobal
+
+> Global chat cooldown (defaukt: 60000)
+#### chatCooldownUser
+
+> User chat cooldown (defaukt: 60000)
 
 
 ## Miscellaneous

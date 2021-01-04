@@ -3,8 +3,6 @@ const chalk = require('chalk');
 
 const logger = console;
 
-console.log = (e) => console.info(chalk.cyan(e));
-
 const open = require('open');
 const net = require('net');
 const ComfyJS = require("comfy.js");
@@ -21,6 +19,24 @@ const twitchToken = process.env.TWITCH_TOKEN;
 const server = net.createServer();
 
 const fs = require('fs').promises;
+
+const defaults = {
+  "chatCommand": "^swap$",
+  "chatCooldownGlobal": "60000",
+  "chatCooldownUser": "60000",
+  "redemptionName": "^swap$",
+  "randomOnly": false,
+};
+
+let userConfig = {};
+
+try {
+  userConfig = require(process.cwd()+'/config.json');
+} catch(e) {
+  //
+}
+
+let config = { ...defaults, ...userConfig };
 
 const precondition = (expression, message) => {
   try {
@@ -101,7 +117,10 @@ const main = () => {
     const swap = async (index) => {
       try {
         let roms = await fs.readdir("CurrentRoms");
-        console.log(index);
+
+        if(config.randomOnly) {
+          index = null;
+        }
 
         if(index) {
           roms = roms
@@ -115,20 +134,30 @@ const main = () => {
         const rom = roms[Math.floor(Math.random() * roms.length)];
         state.currentRom = rom;
 
+        logger.info(chalk.green(`Switching to ${state.currentRom}`));
         switchRom(state.currentRom);
       } catch(e) {
         logger.error(e);
       }
     };
 
+    const chatCommandRegExp = new RegExp(config.chatCommand);
+    const rewardNameRegExp = new RegExp(config.rewardNameRegExp);
+
     ComfyJS.onCommand = ( user, command, message, flags, extra ) => {
-      if(command === 'swap') {
-        swap(message);
+      if(chatCommandRegExp.test(command)) {
+        if(extra.sinceLastCommand.any > 0 && extra.sinceLastCommand.any <= config.chatCooldownGlobal) {
+          // noop
+        } else if(extra.sinceLastCommand.any > 0 && extra.sinceLastCommand.user <= config.chatCooldownUser) {
+          // noop
+        } else {
+          swap(message);
+        }
       }
     }
 
     ComfyJS.onReward = ( user, reward, cost, extra ) => {
-      if(reward === 'swap') {
+      if(rewardNameRegExp.test(reward)) {
         swap(extra);
       }
     }

@@ -1,0 +1,5 @@
+{
+  "chatCommand": "^swap$",
+  "redemptionName": "^swap$",
+  "randomOnly": false
+}
