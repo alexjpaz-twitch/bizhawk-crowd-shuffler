@@ -10,7 +10,7 @@
 
 2. Download the latest release of this project [bizhawk-crowd-shuffler](https://github.com/alexjpaz-twitch/bizhawk-crowd-shuffler/releases/latest).
 
-3. Create a folder called `bizhawk-crowd-shuffler` hat BizHawk is installed in from **step 1** and unzip the release file from **step 2** inside of the newly created folder.
+3. Create a folder called `bizhawk-crowd-shuffler` where the BizHawk is installed in from **step 1** and unzip the release file from **step 2** inside of the newly created folder.
 
 4. Open the `bizhawk-crowd-shuffler` folder and copy any roms that you want shuffled into the `CurrenRoms` folder 
 
