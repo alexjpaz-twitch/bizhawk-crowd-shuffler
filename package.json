@@ -8,10 +8,14 @@
     "open": "^7.3.0",
     "pkg": "^4.4.9"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^8.2.1",
+    "sinon": "^9.2.2"
+  },
   "scripts": {
     "start": "node src/",
-    "test": "echo no tests",
+    "test": "mocha 'src/*.spec.js'",
     "package": "pkg -t node14-win-x64 --out-path=./ src/bin/bizhawk-crowd-shuffler"
   },
   "keywords": [],
