@@ -80,4 +80,101 @@ end
 
 if emu then
     main()
+else
+    print("Running tests") 
+    -- run tests
+    comm = {}
+
+    local function test_ping()
+        local called = false
+        comm.socketServerSend = function()
+            called = true
+        end
+
+        commands.ping()
+
+        assert(called)
+    end
+
+    local function test_parseAndExecuteResponse()
+        local called = false
+        commands.test = function()
+            called = true
+        end
+
+        assert(called == false)
+
+        parseAndExecuteResponse("test")
+
+        assert(called)
+    end
+
+    local function test_parseAndExecuteResponse_withArgs()
+        local called = false
+        local args
+        commands.test = function(input)
+            called = true
+            args = input
+        end
+
+        assert(called == false)
+
+        parseAndExecuteResponse("test\tfoo")
+
+        assert(called)
+
+        assert(args == "foo")
+    end
+
+    local function test_parseAndExecuteResponse_withMultipleCommands()
+        local called = 0
+        commands.test = function(input)
+            called = called + 1
+        end
+
+        assert(called == 0)
+
+        parseAndExecuteResponse("test\ntest\n")
+
+        assert(called == 2)
+    end
+
+    local function test_switchRom()
+        userdata = {}
+        savestate = {}
+        client = {}
+
+        client.openrom = function(args)
+            client.openrom__args = args
+        end
+
+        savestate.load = function(args)
+            savestate.load__args = args
+        end
+
+        savestate.save = function(args)
+            savestate.save__args = args
+        end
+
+        userdata.get = function()
+            return "foo.nes"
+        end
+
+        userdata.set = function(key, value)
+            userdata.set__value = value
+        end
+
+        commands.switchRom("bar.nes")
+
+        assert(savestate.load__args == config.savePath .. "bar.nes.save")
+        assert(userdata.set__value == "bar.nes")
+        assert(savestate.save__args == config.savePath .. "foo.nes.save")
+        assert(client.openrom__args == config.gamePath .. "bar.nes")
+    end
+
+    test_ping()
+    test_parseAndExecuteResponse()
+    test_parseAndExecuteResponse_withArgs()
+    test_parseAndExecuteResponse_withMultipleCommands()
+    test_switchRom();
 end
