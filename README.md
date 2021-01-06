@@ -81,4 +81,7 @@ The shuffler can be configured by adding a `config.json` file (an example is pro
 
 
 ## Miscellaneous
-### [Contributing](./CONTRIBUTING.md)
+
+## [Donation](https://streamlabs.com/alexjpaz/tip]
+
+## [Contributing](./CONTRIBUTING.md)
