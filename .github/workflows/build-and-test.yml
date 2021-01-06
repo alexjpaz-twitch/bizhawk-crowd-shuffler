@@ -10,7 +10,18 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  test-lua:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Lua action
+      uses: mileschou/lua-action@master
+      with:
+        args: lua bizhawk-crowd-shuffler.lua
+
+  build-node:
 
     runs-on: ubuntu-latest
 
