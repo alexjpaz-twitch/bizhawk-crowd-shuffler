@@ -83,6 +83,8 @@ The shuffler can be configured by adding a `config.json` file (an example is pro
 
 > timer options
 
+Note: Set this null to disable the timer
+
 ##### min
 
 > timer minimum
