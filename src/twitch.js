@@ -38,7 +38,6 @@ class TwitchShufflerListener {
   }
 
   async onCommand( user, command, message, flags, extra ) {
-    console.log(user, command);
     if(chatCommandRegExp.test(command)) {
       const isCoolingDown = this.isCoolingDown(user, command, message, flags, extra);
 
