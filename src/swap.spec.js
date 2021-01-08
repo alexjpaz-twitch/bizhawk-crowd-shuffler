@@ -1,3 +1,5 @@
+const config = require('./config');
+
 const { expect } = require('chai');
 const sinon  = require('sinon');
 
@@ -113,5 +115,82 @@ describe('swap', () => {
     const rom = await shuffler.shuffle('1');
 
     expect(rom).to.eql('1_Foo.nes');
+  });
+
+
+  it('should be random on null', async () => {
+
+    const shuffler = new RomShuffler();
+
+    shuffler.state = {
+      currentRom: '1_Foo.nes'
+    };
+
+    shuffler.fetchCurrentRoms = sinon.spy(() => [
+      '1_Foo.nes',
+      '2_Bar.nes'
+    ]);
+
+    const rom = await shuffler.shuffle(null);
+
+    expect(rom).to.eql('2_Bar.nes');
+  });
+
+
+  it('should be random on empty', async () => {
+
+    const shuffler = new RomShuffler();
+
+    shuffler.state = {
+      currentRom: '1_Foo.nes'
+    };
+
+    shuffler.fetchCurrentRoms = sinon.spy(() => [
+      '1_Foo.nes',
+      '2_Bar.nes'
+    ]);
+
+    const rom = await shuffler.shuffle('');
+
+    expect(rom).to.eql('2_Bar.nes');
+  });
+
+
+  it('should be random on empty', async () => {
+
+    const shuffler = new RomShuffler();
+
+    shuffler.state = {
+      currentRom: '1_Foo.nes'
+    };
+
+    shuffler.fetchCurrentRoms = sinon.spy(() => [
+      '1_Foo.nes',
+      '2_Bar.nes'
+    ]);
+
+    const rom = await shuffler.shuffle('   ');
+
+    expect(rom).to.eql('2_Bar.nes');
+  });
+
+  it('should be random on "rng"', async () => {
+
+    const shuffler = new RomShuffler();
+
+    shuffler.state = {
+      currentRom: '1_Foo.nes'
+    };
+
+    shuffler.fetchCurrentRoms = sinon.spy(() => [
+      '1_Foo.nes',
+      '2_Bar.nes'
+    ]);
+
+    const rng = "rng" // TODO
+
+    const rom = await shuffler.shuffle(rng);
+
+    expect(rom).to.eql('2_Bar.nes');
   });
 });

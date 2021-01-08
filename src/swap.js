@@ -5,6 +5,8 @@ const chalk = require('chalk');
 
 const config = require('./config');
 
+const isRNG = (t) => new RegExp(config.redepmtionRandomText).test(t);
+
 class RomShuffler {
   constructor() {
     this.state = {};
@@ -25,6 +27,10 @@ class RomShuffler {
       }
 
       if(index) {
+        index = index.trim();
+      }
+
+      if(index && index !== '' && !isRNG(index)) {
         roms = roms
           .filter((rom) => rom.toLowerCase().startsWith(index.toLowerCase()));
       } else {

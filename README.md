@@ -79,6 +79,10 @@ The shuffler can be configured by adding a `config.json` file (an example is pro
 
 > User chat cooldown (defaukt: 60000)
 
+#### redepmtionRandomText
+
+> Text that is used for a random game via redemption (default: ^rng$)
+
 #### timer
 
 > timer options

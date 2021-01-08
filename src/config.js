@@ -35,6 +35,7 @@ const getDefaultConfig = () => {
     "chatCooldownGlobal": "60000",
     "chatCooldownUser": "60000",
     "redemptionName": "^swap$",
+    "redepmtionRandomText": "^rng$",
     "randomOnly": false,
     "timer": {
       "min": 5000,
