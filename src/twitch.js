@@ -55,6 +55,11 @@ class TwitchShufflerListener {
   }
 
   async start() {
+
+    if(!config.channel) {
+      logger.warn(chalk.yellow("No twitch channel specified"));
+      return;
+    }
     ComfyJS.onCommand = this.onCommand.bind(this);
     ComfyJS.onReward = this.onReward.bind(this);
 
