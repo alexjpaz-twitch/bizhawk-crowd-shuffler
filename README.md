@@ -79,6 +79,18 @@ The shuffler can be configured by adding a `config.json` file (an example is pro
 
 > User chat cooldown (defaukt: 60000)
 
+#### timer
+
+> timer options
+
+##### min
+
+> timer minimum
+
+##### max
+
+> timer maximum
+
 
 ## Miscellaneous
 

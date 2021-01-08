@@ -55,6 +55,28 @@ const startServer = async () => {
     switchRom(rom);
   };
 
+  const startTimer = () => {
+    if(!config.timer) {
+      logger.info(chalk.blue(`Timer is disabled`));
+      return;
+    }
+
+    let timeoutId =  null;
+
+    let { min, max } = config.timer;
+
+    logger.info(chalk.blue(`Timer is enabled between ${min / 1000} and ${max / 1000} seconds`));
+
+    function tick() {
+      swap();
+      let timeout = Math.floor(Math.random() * max) + min;
+
+      setTimeout(tick, timeout);
+    }
+
+    tick();
+  };
+
   const romShuffler = new RomShuffler();
   const twitchShufflerListener = new TwitchShufflerListener({ swap });
 
@@ -66,7 +88,7 @@ const startServer = async () => {
 
     await startBizhawk(config.port, config.host);
     await twitchShufflerListener.start();
-
+    await startTimer();
 
     server.on('connection', function(sock) {
       sockets.push(sock);
