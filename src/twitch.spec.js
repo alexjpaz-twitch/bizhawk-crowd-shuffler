@@ -78,84 +78,202 @@ describe('twitch', () => {
     });
 
     it('should not cooldown on first command', () => {
+      listener.lastCommandTimestamps = {};
 
       let isCoolingDown = listener.isCoolingDown(
         "fake_user",
         "fake_command",
         "fake_message",
         {},
-        {
-          sinceLastCommand: {
-            any: 0
-          }
-        }
       );
 
       expect(isCoolingDown).to.eql(false);
     });
 
-    it('should end cooldown if greater than global', () => {
-      let isCoolingDown = listener.isCoolingDown(
-        "fake_user",
-        "fake_command",
-        "fake_message",
-        {},
-        {
-          sinceLastCommand: {
-            any: config.chatCooldownGlobal + 1
-          }
-        }
-      );
+    describe('global', () => {
+      it('should end cooldown if greater than global', () => {
+        let isCoolingDown;
 
-      expect(isCoolingDown).to.eql(false);
+        listener.lastCommandTimestamps = {
+          '$$global$$': new Date().getTime() + (+config.chatCooldownGlobal) - 1,
+        };
+
+        isCoolingDown = listener.isCoolingDown(
+          "fake_user",
+          "fake_command",
+          "fake_message",
+          {},
+        );
+
+        expect(isCoolingDown).to.eql(true);
+
+        listener.lastCommandTimestamps = {
+          '$$global$$': new Date().getTime() + (+config.chatCooldownGlobal) + 1,
+        };
+
+        isCoolingDown = listener.isCoolingDown(
+          "fake_user",
+          "fake_command",
+          "fake_message",
+          {},
+        );
+
+        expect(isCoolingDown).to.eql(false);
+      });
+
+      it('should cooldown if less than global', () => {
+        listener.lastCommandTimestamps['$$global$$'] = new Date().getTime();
+
+        let isCoolingDown = listener.isCoolingDown(
+          "fake_user",
+          "fake_command",
+          "fake_message",
+          {},
+        );
+
+        expect(isCoolingDown).to.eql(true);
+      });
     });
 
-    it('should cooldown if less than global', () => {
-      let isCoolingDown = listener.isCoolingDown(
-        "fake_user",
-        "fake_command",
-        "fake_message",
-        {},
-        {
-          sinceLastCommand: {
-            any: config.chatCooldownGlobal - 1
-          }
-        }
-      );
+    describe('user', () => {
+      it('should cooldown if less than user', () => {
 
-      expect(isCoolingDown).to.eql(true);
+        listener.lastCommandTimestamps = {
+          'fake_user': new Date().getTime() + (+config.chatCooldownUser) - 1,
+        };
+
+        let isCoolingDown = listener.isCoolingDown(
+          "fake_user",
+          "fake_command",
+          "fake_message",
+          {},
+          {
+            sinceLastCommand: {
+              user: config.chatCooldownUser - 1
+            }
+          }
+        );
+
+        expect(isCoolingDown).to.eql(true);
+      });
+
+      it('should end cooldown if greater than user', () => {
+        let isCoolingDown;
+
+        listener.lastCommandTimestamps = {
+          'fake_user': new Date().getTime() + (+config.chatCooldownUser) - 1,
+        };
+
+        isCoolingDown = listener.isCoolingDown(
+          "fake_user",
+          "fake_command",
+          "fake_message",
+          {},
+        );
+
+        expect(isCoolingDown).to.eql(true);
+
+        listener.lastCommandTimestamps = {
+          'fake_user': new Date().getTime() + (+config.chatCooldownUser) + 1,
+        };
+
+        isCoolingDown = listener.isCoolingDown(
+          "fake_user",
+          "fake_command",
+          "fake_message",
+          {},
+        );
+
+        expect(isCoolingDown).to.eql(false);
+      });
     });
 
-    it('should cooldown if less than user', () => {
-      let isCoolingDown = listener.isCoolingDown(
-        "fake_user",
-        "fake_command",
-        "fake_message",
-        {},
-        {
-          sinceLastCommand: {
-            user: config.chatCooldownUser - 1
-          }
-        }
-      );
+    describe('global+user', () => {
+      it('same user', () => {
+        let isCoolingDown;
 
-      expect(isCoolingDown).to.eql(true);
-    });
+        const updateIsCoolingDown = (timestamps) => {
+          listener.lastCommandTimestamps = timestamps;
+          isCoolingDown = listener.isCoolingDown(
+            "fake_user",
+            "fake_command",
+            "fake_message",
+            {},
+          );
+        };
 
-    it('should end cooldown if greater than user', () => {
-      let isCoolingDown = listener.isCoolingDown(
-        "fake_user",
-        "fake_command",
-        "fake_message",
-        {},
-        {
-          sinceLastCommand: {
-            user: config.chatCooldownGlobal + 1
-          }
-        }
-      );
+        updateIsCoolingDown({
+          '$$global$$': new Date().getTime() + (+config.chatCooldownGlobal) - 1,
+          'fake_user': new Date().getTime() + (+config.chatCooldownUser) - 1,
+        });
 
-      expect(isCoolingDown).to.eql(false);
+        expect(isCoolingDown).to.eql(true);
+
+        updateIsCoolingDown({
+          '$$global$$': new Date().getTime() + (+config.chatCooldownGlobal) + 1,
+          'fake_user': new Date().getTime() + (+config.chatCooldownUser) - 1,
+        });
+
+        expect(isCoolingDown).to.eql(true);
+
+        updateIsCoolingDown({
+          '$$global$$': new Date().getTime() + (+config.chatCooldownGlobal) - 1,
+          'fake_user': new Date().getTime() + (+config.chatCooldownUser) + 1,
+        });
+
+        expect(isCoolingDown).to.eql(true);
+
+        updateIsCoolingDown({
+          '$$global$$': new Date().getTime() + (+config.chatCooldownGlobal) + 1,
+          'fake_user': new Date().getTime() + (+config.chatCooldownUser) + 1,
+        });
+
+        expect(isCoolingDown).to.eql(false);
+      });
+
+      it('different user', () => {
+        let isCoolingDown;
+
+        const updateIsCoolingDown = (timestamps, user) => {
+          listener.lastCommandTimestamps = timestamps;
+          isCoolingDown = listener.isCoolingDown(
+            user,
+            "fake_command",
+            "fake_message",
+            {},
+          );
+        };
+
+        updateIsCoolingDown({
+          '$$global$$': new Date().getTime() + (+config.chatCooldownGlobal) - 1,
+          'fake_user1': new Date().getTime() + (+config.chatCooldownUser) - 1,
+          'fake_user2': new Date().getTime() + (+config.chatCooldownUser) - 1,
+        }, 'fake_user1');
+
+        expect(isCoolingDown).to.eql(true);
+
+        updateIsCoolingDown({
+          '$$global$$': new Date().getTime() + (+config.chatCooldownGlobal) + 1,
+          'fake_user1': new Date().getTime() + (+config.chatCooldownUser) + 1,
+          'fake_user2': new Date().getTime() + (+config.chatCooldownUser) - 1,
+        }, 'fake_user2');
+
+        expect(isCoolingDown).to.eql(true);
+
+        updateIsCoolingDown({
+          '$$global$$': new Date().getTime() + (+config.chatCooldownGlobal) + 1,
+          'fake_user1': new Date().getTime() + (+config.chatCooldownUser) - 1,
+          'fake_user2': new Date().getTime() + (+config.chatCooldownUser) + 1,
+        }, 'fake_user2');
+
+        expect(isCoolingDown).to.eql(false);
+
+        updateIsCoolingDown({
+        }, 'fake_user2');
+
+        expect(isCoolingDown).to.eql(false);
+      });
+
     });
   });
 });
