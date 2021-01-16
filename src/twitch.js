@@ -22,11 +22,11 @@ class TwitchShufflerListener {
   isCoolingDown(user, command, message, flags, extra) {
     let isCoolingDown = true;
 
-    if(extra.sinceLastCommand.any > 0 && extra.sinceLastCommand.any <= config.chatCooldownGlobal) {
+    if(config.chatCooldownGlobal && extra.sinceLastCommand.any > 0 && extra.sinceLastCommand.any <= config.chatCooldownGlobal) {
       let cooldownLeft = Math.round((config.chatCooldownGlobal - extra.sinceLastCommand.any) / 1000);
       logger.info(chalk.grey(`Ignoring swap due to the global cooldown ${cooldownLeft}`));
       this.say(`@${user} command ${command} has ${cooldownLeft}s left the cooldown.`);
-    } else if(extra.sinceLastCommand.user > 0 && extra.sinceLastCommand.user <= config.chatCooldownUser) {
+    } else if(config.chatCooldownUser && extra.sinceLastCommand.user > 0 && extra.sinceLastCommand.user <= config.chatCooldownUser) {
       let cooldownLeft = Math.round((config.chatCooldownUser - extra.sinceLastCommand.user) / 1000);
       logger.info(chalk.grey(`Ignoring swap due to the user cooldown ${cooldownLeft}`));
       this.say(`@${user} command ${command} has ${cooldownLeft}s left the cooldown.`);
