@@ -90,15 +90,14 @@ describe('twitch', () => {
       expect(isCoolingDown).to.eql(false);
     });
 
-    describe('global', () => {
-      it('should end cooldown if greater than global', () => {
-        let isCoolingDown;
-
+    describe('display message', () => {
+      it('user', () => {
         listener.lastCommandTimestamps = {
-          '$$global$$': new Date().getTime() + (+config.chatCooldownGlobal) - 1,
+          'fake_user': new Date().getTime() - 1000,
         };
+        listener.say = sinon.spy();
 
-        isCoolingDown = listener.isCoolingDown(
+        const isCoolingDown = listener.isCoolingDown(
           "fake_user",
           "fake_command",
           "fake_message",
@@ -106,79 +105,18 @@ describe('twitch', () => {
         );
 
         expect(isCoolingDown).to.eql(true);
-
-        listener.lastCommandTimestamps = {
-          '$$global$$': new Date().getTime() + (+config.chatCooldownGlobal) + 1,
-        };
-
-        isCoolingDown = listener.isCoolingDown(
-          "fake_user",
-          "fake_command",
-          "fake_message",
-          {},
-        );
-
-        expect(isCoolingDown).to.eql(false);
+        expect(listener.say.args[0][0]).to.match(/has 59s left/);
       });
 
-      it('should cooldown if less than global', () => {
+
+      it('global', () => {
         listener.lastCommandTimestamps['$$global$$'] = new Date().getTime();
 
-        let isCoolingDown = listener.isCoolingDown(
-          "fake_user",
-          "fake_command",
-          "fake_message",
-          {},
-        );
-
-        expect(isCoolingDown).to.eql(true);
-      });
-
-      it('should display a message on cooldown', () => {
-        listener.lastCommandTimestamps['$$global$$'] = new Date().getTime() + 1000;
         listener.say = sinon.spy();
 
-        listener.isCoolingDown(
-          "fake_user",
-          "fake_command",
-          "fake_message",
-          {},
-        );
+        listener.lastCommandTimestamps['$$global$$'] -= 1000;
 
-        expect(listener.say.args[0][0]).to.match(/has 59s left/);
-      });
-    });
-
-    describe('user', () => {
-      it('should cooldown if less than user', () => {
-
-        listener.lastCommandTimestamps = {
-          'fake_user': new Date().getTime() + (+config.chatCooldownUser) - 1,
-        };
-
-        let isCoolingDown = listener.isCoolingDown(
-          "fake_user",
-          "fake_command",
-          "fake_message",
-          {},
-          {
-            sinceLastCommand: {
-              user: config.chatCooldownUser - 1
-            }
-          }
-        );
-
-        expect(isCoolingDown).to.eql(true);
-      });
-
-      it('should end cooldown if greater than user', () => {
-        let isCoolingDown;
-
-        listener.lastCommandTimestamps = {
-          'fake_user': new Date().getTime() + (+config.chatCooldownUser) - 1,
-        };
-
-        isCoolingDown = listener.isCoolingDown(
+        const isCoolingDown = listener.isCoolingDown(
           "fake_user",
           "fake_command",
           "fake_message",
@@ -186,83 +124,14 @@ describe('twitch', () => {
         );
 
         expect(isCoolingDown).to.eql(true);
-
-        listener.lastCommandTimestamps = {
-          'fake_user': new Date().getTime() + (+config.chatCooldownUser) + 1,
-        };
-
-        isCoolingDown = listener.isCoolingDown(
-          "fake_user",
-          "fake_command",
-          "fake_message",
-          {},
-        );
-
-        expect(isCoolingDown).to.eql(false);
-      });
-
-      it('should display a message on cooldown', () => {
-         listener.lastCommandTimestamps = {
-          'fake_user': new Date().getTime() + 1000,
-        };
-        listener.say = sinon.spy();
-
-        listener.isCoolingDown(
-          "fake_user",
-          "fake_command",
-          "fake_message",
-          {},
-        );
-
         expect(listener.say.args[0][0]).to.match(/has 59s left/);
       });
-
     });
 
     describe('global+user', () => {
-      it('same user', () => {
-        let isCoolingDown;
-
-        const updateIsCoolingDown = (timestamps) => {
-          listener.lastCommandTimestamps = timestamps;
-          isCoolingDown = listener.isCoolingDown(
-            "fake_user",
-            "fake_command",
-            "fake_message",
-            {},
-          );
-        };
-
-        updateIsCoolingDown({
-          '$$global$$': new Date().getTime() + (+config.chatCooldownGlobal) - 1,
-          'fake_user': new Date().getTime() + (+config.chatCooldownUser) - 1,
-        });
-
-        expect(isCoolingDown).to.eql(true);
-
-        updateIsCoolingDown({
-          '$$global$$': new Date().getTime() + (+config.chatCooldownGlobal) + 1,
-          'fake_user': new Date().getTime() + (+config.chatCooldownUser) - 1,
-        });
-
-        expect(isCoolingDown).to.eql(true);
-
-        updateIsCoolingDown({
-          '$$global$$': new Date().getTime() + (+config.chatCooldownGlobal) - 1,
-          'fake_user': new Date().getTime() + (+config.chatCooldownUser) + 1,
-        });
-
-        expect(isCoolingDown).to.eql(true);
-
-        updateIsCoolingDown({
-          '$$global$$': new Date().getTime() + (+config.chatCooldownGlobal) + 1,
-          'fake_user': new Date().getTime() + (+config.chatCooldownUser) + 1,
-        });
-
-        expect(isCoolingDown).to.eql(false);
-      });
-
       it('different user', () => {
+        const now = new Date().getTime();
+
         let isCoolingDown;
 
         const updateIsCoolingDown = (timestamps, user) => {
@@ -276,35 +145,37 @@ describe('twitch', () => {
         };
 
         updateIsCoolingDown({
-          '$$global$$': new Date().getTime() + (+config.chatCooldownGlobal) - 1,
-          'fake_user1': new Date().getTime() + (+config.chatCooldownUser) - 1,
-          'fake_user2': new Date().getTime() + (+config.chatCooldownUser) - 1,
-        }, 'fake_user1');
-
-        expect(isCoolingDown).to.eql(true);
-
-        updateIsCoolingDown({
-          '$$global$$': new Date().getTime() + (+config.chatCooldownGlobal) + 1,
-          'fake_user1': new Date().getTime() + (+config.chatCooldownUser) + 1,
-          'fake_user2': new Date().getTime() + (+config.chatCooldownUser) - 1,
-        }, 'fake_user2');
-
-        expect(isCoolingDown).to.eql(true);
-
-        updateIsCoolingDown({
-          '$$global$$': new Date().getTime() + (+config.chatCooldownGlobal) + 1,
-          'fake_user1': new Date().getTime() + (+config.chatCooldownUser) - 1,
-          'fake_user2': new Date().getTime() + (+config.chatCooldownUser) + 1,
+          '$$global$$': now - (+config.chatCooldownGlobal) - 1,
+          'fake_user1': now - (+config.chatCooldownUser)   - 1,
+          'fake_user2': now - (+config.chatCooldownUser)   - 1,
         }, 'fake_user2');
 
         expect(isCoolingDown).to.eql(false);
 
         updateIsCoolingDown({
+          '$$global$$': now - (+config.chatCooldownGlobal) - 1,
+          'fake_user1': now - (+config.chatCooldownUser)   + 1,
+          'fake_user2': now - (+config.chatCooldownUser)   - 1,
         }, 'fake_user2');
 
         expect(isCoolingDown).to.eql(false);
-      });
 
+        updateIsCoolingDown({
+          '$$global$$': now - (+config.chatCooldownGlobal) + 1,
+          'fake_user1': now - (+config.chatCooldownUser)   - 1,
+          'fake_user2': now - (+config.chatCooldownUser)   - 1,
+        }, 'fake_user2');
+
+        expect(isCoolingDown).to.eql(true);
+
+        updateIsCoolingDown({
+          '$$global$$': now - (+config.chatCooldownGlobal) - 1,
+          'fake_user1': now - (+config.chatCooldownUser)   - 1,
+          'fake_user2': now - (+config.chatCooldownUser)   + 1,
+        }, 'fake_user2');
+
+        expect(isCoolingDown).to.eql(true);
+     });
     });
   });
 });

@@ -28,14 +28,14 @@ class TwitchShufflerListener {
     let lastCommandTimestamp = this.lastCommandTimestamps[user] || 0;
     let lastCommandTimestampGlobal = this.lastCommandTimestamps['$$global$$'] || 0;
 
-    if(config.chatCooldownGlobal && lastCommandTimestampGlobal > 0 && (lastCommandTimestampGlobal - now) <= config.chatCooldownGlobal) {
-      let cooldownLeft = Math.round(config.chatCooldownGlobal - (lastCommandTimestampGlobal - now));
-      let message = `@${user} command ${command} has ${cooldownLeft / 1000}s left for global cooldown.`;
+    if(config.chatCooldownUser && lastCommandTimestamp > 0 && (now - lastCommandTimestamp) <= config.chatCooldownUser) {
+      let cooldownLeft = config.chatCooldownUser - (now - lastCommandTimestamp );
+      let message = `@${user} command ${command} has ${Math.round(cooldownLeft / 1000)}s left for user cooldown.`;
       logger.info(chalk.grey(message));
       this.say(message);
-    } else if(config.chatCooldownUser && lastCommandTimestamp > 0 && (lastCommandTimestamp - now) <= config.chatCooldownUser) {
-      let cooldownLeft = Math.round(config.chatCooldownUser - (lastCommandTimestamp - now));
-      let message = `@${user} command ${command} has ${cooldownLeft / 1000}s left for user cooldown.`;
+    } else if(config.chatCooldownGlobal && lastCommandTimestampGlobal > 0 && (now - lastCommandTimestampGlobal) <= config.chatCooldownGlobal) {
+      let cooldownLeft = config.chatCooldownGlobal - (now - lastCommandTimestampGlobal);
+      let message = `@${user} command ${command} has ${Math.round(cooldownLeft / 1000)}s left for global cooldown.`;
       logger.info(chalk.grey(message));
       this.say(message);
     } else {
