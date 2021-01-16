@@ -29,13 +29,15 @@ class TwitchShufflerListener {
     let lastCommandTimestampGlobal = this.lastCommandTimestamps['$$global$$'] || 0;
 
     if(config.chatCooldownGlobal && lastCommandTimestampGlobal > 0 && (lastCommandTimestampGlobal - now) <= config.chatCooldownGlobal) {
-      let cooldownLeft = -1;
-      logger.info(chalk.grey(`Ignoring swap due to the global cooldown ${cooldownLeft}`));
-      this.say(`@${user} command ${command} has ${cooldownLeft}s left the cooldown.`);
+      let cooldownLeft = Math.round(config.chatCooldownGlobal - (lastCommandTimestampGlobal - now));
+      let message = `@${user} command ${command} has ${cooldownLeft / 1000}s left for global cooldown.`;
+      logger.info(chalk.grey(message));
+      this.say(message);
     } else if(config.chatCooldownUser && lastCommandTimestamp > 0 && (lastCommandTimestamp - now) <= config.chatCooldownUser) {
-      let cooldownLeft = -1;
-      logger.info(chalk.grey(`Ignoring swap due to the user cooldown ${cooldownLeft}`));
-      this.say(`@${user} command ${command} has ${cooldownLeft}s left the cooldown.`);
+      let cooldownLeft = Math.round(config.chatCooldownUser - (lastCommandTimestamp - now));
+      let message = `@${user} command ${command} has ${cooldownLeft / 1000}s left for user cooldown.`;
+      logger.info(chalk.grey(message));
+      this.say(message);
     } else {
       isCoolingDown = false;
     }

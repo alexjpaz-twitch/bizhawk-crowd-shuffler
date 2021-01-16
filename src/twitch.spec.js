@@ -133,6 +133,20 @@ describe('twitch', () => {
 
         expect(isCoolingDown).to.eql(true);
       });
+
+      it('should display a message on cooldown', () => {
+        listener.lastCommandTimestamps['$$global$$'] = new Date().getTime() + 1000;
+        listener.say = sinon.spy();
+
+        listener.isCoolingDown(
+          "fake_user",
+          "fake_command",
+          "fake_message",
+          {},
+        );
+
+        expect(listener.say.args[0][0]).to.match(/has 59s left/);
+      });
     });
 
     describe('user', () => {
@@ -186,6 +200,23 @@ describe('twitch', () => {
 
         expect(isCoolingDown).to.eql(false);
       });
+
+      it('should display a message on cooldown', () => {
+         listener.lastCommandTimestamps = {
+          'fake_user': new Date().getTime() + 1000,
+        };
+        listener.say = sinon.spy();
+
+        listener.isCoolingDown(
+          "fake_user",
+          "fake_command",
+          "fake_message",
+          {},
+        );
+
+        expect(listener.say.args[0][0]).to.match(/has 59s left/);
+      });
+
     });
 
     describe('global+user', () => {
