@@ -42,14 +42,14 @@ class TwitchShufflerListener {
       const isCoolingDown = this.isCoolingDown(user, command, message, flags, extra);
 
       if(!isCoolingDown) {
-        this.swap(message);
+        this.swap(message, `${user} via command`);
       }
     }
   }
 
   async onReward( user, reward, cost, extra ) {
     if(rewardNameRegExp.test(reward)) {
-      this.swap(extra);
+      this.swap(extra, `${user} via reward`);
     }
   }
 

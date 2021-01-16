@@ -37,22 +37,22 @@ const startBizhawk = (port, host) => {
 const startServer = async () => {
   let sockets = [];
 
-  const switchRom = (rom) => {
+  const switchRom = (rom, cause) => {
     if(!rom) {
       return;
     }
     const romName = rom.replace(/\./g, '_');
 
-    twitchShufflerListener.say(`/me Swapping to "${romName}"`);
+    twitchShufflerListener.say(`/me Swapping to "${romName}" (${cause})`);
     sockets.forEach((sock) => {
       sock.write(`switchRom\t${rom}\n`);
     });
   };
 
-  const swap = async (index) => {
+  const swap = async (index, cause) => {
     const rom = await romShuffler.shuffle(index);
 
-    switchRom(rom);
+    switchRom(rom, cause);
   };
 
   const startTimer = () => {
@@ -68,7 +68,7 @@ const startServer = async () => {
     logger.info(chalk.blue(`Timer is enabled between ${min / 1000} and ${max / 1000} seconds`));
 
     function tick() {
-      swap();
+      swap(null, "auto timer");
       let timeout = Math.floor(Math.random() * max) + min;
 
       setTimeout(tick, timeout);
