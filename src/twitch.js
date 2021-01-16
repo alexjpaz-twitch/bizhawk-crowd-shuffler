@@ -12,8 +12,9 @@ const rewardNameRegExp = new RegExp(config.rewardNameRegExp);
 class TwitchShufflerListener {
   constructor(props = {}) {
     this.swap = props.swap;
-  }
 
+    this.lastCommandTimestamps = {};
+  }
 
   async say(text) {
     ComfyJS.Say(text);
@@ -22,14 +23,21 @@ class TwitchShufflerListener {
   isCoolingDown(user, command, message, flags, extra) {
     let isCoolingDown = true;
 
-    if(config.chatCooldownGlobal && extra.sinceLastCommand.any > 0 && extra.sinceLastCommand.any <= config.chatCooldownGlobal) {
-      let cooldownLeft = Math.round((config.chatCooldownGlobal - extra.sinceLastCommand.any) / 1000);
-      logger.info(chalk.grey(`Ignoring swap due to the global cooldown ${cooldownLeft}`));
-      this.say(`@${user} command ${command} has ${cooldownLeft}s left the cooldown.`);
-    } else if(config.chatCooldownUser && extra.sinceLastCommand.user > 0 && extra.sinceLastCommand.user <= config.chatCooldownUser) {
-      let cooldownLeft = Math.round((config.chatCooldownUser - extra.sinceLastCommand.user) / 1000);
-      logger.info(chalk.grey(`Ignoring swap due to the user cooldown ${cooldownLeft}`));
-      this.say(`@${user} command ${command} has ${cooldownLeft}s left the cooldown.`);
+    const now = new Date().getTime();
+
+    let lastCommandTimestamp = this.lastCommandTimestamps[user] || 0;
+    let lastCommandTimestampGlobal = this.lastCommandTimestamps['$$global$$'] || 0;
+
+    if(config.chatCooldownUser && lastCommandTimestamp > 0 && (now - lastCommandTimestamp) <= config.chatCooldownUser) {
+      let cooldownLeft = config.chatCooldownUser - (now - lastCommandTimestamp );
+      let message = `@${user} command ${command} has ${Math.round(cooldownLeft / 1000)}s left for user cooldown.`;
+      logger.info(chalk.grey(message));
+      this.say(message);
+    } else if(config.chatCooldownGlobal && lastCommandTimestampGlobal > 0 && (now - lastCommandTimestampGlobal) <= config.chatCooldownGlobal) {
+      let cooldownLeft = config.chatCooldownGlobal - (now - lastCommandTimestampGlobal);
+      let message = `@${user} command ${command} has ${Math.round(cooldownLeft / 1000)}s left for global cooldown.`;
+      logger.info(chalk.grey(message));
+      this.say(message);
     } else {
       isCoolingDown = false;
     }
@@ -42,6 +50,8 @@ class TwitchShufflerListener {
       const isCoolingDown = this.isCoolingDown(user, command, message, flags, extra);
 
       if(!isCoolingDown) {
+        this.lastCommandTimestamps['$$global$$'] = new Date().getTime();
+        this.lastCommandTimestamps[user] = new Date().getTime();
         this.swap(message, `${user} via command`);
       }
     }
