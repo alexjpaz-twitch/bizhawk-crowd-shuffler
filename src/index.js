@@ -77,6 +77,10 @@ const startServer = async () => {
     tick();
   };
 
+  setInterval(() => {
+    console.log(config);
+  }, 1000);
+
   const romShuffler = new RomShuffler();
   const twitchShufflerListener = new TwitchShufflerListener({ swap });
 

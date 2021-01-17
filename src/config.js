@@ -18,6 +18,7 @@ const getUserConfig = () => {
   let userConfig = {};
 
   try {
+    delete require.cache[require.resolve(process.cwd()+'/config.json')];
     userConfig = require(process.cwd()+'/config.json');
   } catch(e) {
     //
@@ -66,6 +67,14 @@ const resetConfig = (
 
   return config;
 };
+
+const watchFileConfig = () => {
+  const fs = require('fs');
+
+  fs.watchFile(process.cwd()+'/config.json', () => resetConfig());
+};
+
+watchFileConfig();
 
 resetConfig();
 
