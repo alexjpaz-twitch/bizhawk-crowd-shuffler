@@ -49,6 +49,18 @@ const startServer = async () => {
     });
   };
 
+  const list = async () => {
+    let result = await romShuffler.fetchCurrentRoms();
+
+    result = result
+      .map((rom) => rom.replace(/\./g, '_'))
+      .filter((rom) => rom !== 'DeleteMe')
+      .join(',');
+    ;
+
+    return result;
+  };
+
   const swap = async (index, cause) => {
     const rom = await romShuffler.shuffle(index);
 
@@ -78,7 +90,10 @@ const startServer = async () => {
   };
 
   const romShuffler = new RomShuffler();
-  const twitchShufflerListener = new TwitchShufflerListener({ swap });
+  const twitchShufflerListener = new TwitchShufflerListener({
+    swap,
+    list,
+  });
 
   logger.info(chalk.blue(`TCP Server is starting on ${config.host} ${config.port}`));
 

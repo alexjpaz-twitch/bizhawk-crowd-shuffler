@@ -32,6 +32,7 @@ const getDefaultConfig = () => {
     "port": 7070,
     "host": "127.0.0.1",
     "chatCommand": "^swap$",
+    "chatListCommand": "^list$",
     "chatCooldownGlobal": "60000",
     "chatCooldownUser": "60000",
     "redemptionName": "^swap$",
