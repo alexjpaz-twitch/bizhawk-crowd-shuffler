@@ -7,6 +7,7 @@ const getEnvironmentConfig = () => {
     port: process.env.PORT,
     host: process.env.HOST,
     channel: process.env.CHANNEL,
+    session: process.env.session,
     bizhawkPath: process.env.BIZHAWK_PATH,
     twitchToken: process.env.TWITCH_TOKEN
   };
@@ -38,6 +39,7 @@ const getDefaultConfig = () => {
     "redemptionName": "^swap$",
     "redepmtionRandomText": "^rng$",
     "randomOnly": false,
+    "session": "default",
     "timer": {
       "min": 5000,
       "max": 60000
