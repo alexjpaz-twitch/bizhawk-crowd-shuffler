@@ -61,7 +61,7 @@ class TwitchShufflerListener {
     }
 
     if(chatListCommandRegExp.test(command)) {
-      this.say(await this.list());
+      this.say(await this.list(message));
     }
   }
 

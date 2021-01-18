@@ -61,7 +61,11 @@ The shuffler can be configured by adding a `config.json` file (an example is pro
 
 #### chatCommand
 
-> Configures the chat command (e.g !swap) to respond to (default: ^swap$)
+> Configures the swap chat command (e.g !swap) to respond to (default: ^swap$)
+
+#### chatListCommand
+
+> Configures the list chat command (e.g !list) to respond to (default: ^list$)
 
 #### redemptionName
 
