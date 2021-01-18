@@ -77,6 +77,10 @@ const startServer = async () => {
   const swap = async (index, cause) => {
     const rom = await romShuffler.shuffle(index);
 
+    if(!rom || rom === '') {
+      twitchShufflerListener.say(`/me No rom matches "${index}"`);
+    }
+
     switchRom(rom, cause);
   };
 
