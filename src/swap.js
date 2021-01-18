@@ -13,7 +13,7 @@ class RomShuffler {
   }
 
   async fetchCurrentRoms() {
-    let roms = await fs.readdir("CurrentRoms");
+    let roms = await fs.readdir(`./sessions/${config.session}/CurrentRoms`);
 
     return roms;
   }

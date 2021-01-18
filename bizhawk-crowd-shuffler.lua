@@ -1,7 +1,9 @@
 local config = {}
 
-config.gamePath = ".\\CurrentROMs\\"
-config.savePath = ".\\CurrentSaves\\"
+config.sessionPath = os.getenv("session") and os.getenv("session") or 'default'
+
+config.gamePath = ".\\sessions\\" .. config.sessionPath .. "\\CurrentROMs\\"
+config.savePath = ".\\sessions\\" .. config.sessionPath .. "\\CurrentSaves\\"
 
 local frame = 0
 

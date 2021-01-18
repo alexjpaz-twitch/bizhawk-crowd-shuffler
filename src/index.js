@@ -27,6 +27,11 @@ const startBizhawk = (port, host) => {
   // TODO
   const isWin = process.platform === "win32";
   if(isWin) {
+
+    if(!process.env.session) {
+      process.env.session = config.session;
+    }
+
     open('Start_BizHawk_Listen_To_Crowd_Shuffler.bat');
     logger.info(chalk.green("Bizhawk started"));
   } else {
