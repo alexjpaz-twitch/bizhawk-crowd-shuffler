@@ -31,6 +31,7 @@ const getDefaultConfig = () => {
     "version": "1",
     "port": 7070,
     "host": "127.0.0.1",
+    "bizhawkPath": "..\\",
     "chatCommand": "^swap$",
     "chatListCommand": "^list$",
     "chatCooldownGlobal": "60000",
