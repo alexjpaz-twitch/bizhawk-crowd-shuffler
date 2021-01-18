@@ -14,6 +14,30 @@ describe('twitch', () => {
       listener = new TwitchShufflerListener();
     });
 
+    describe('list', () => {
+      it('should list games on !list', () => {
+        listener.list = sinon.spy();
+
+        listener.isCoolingDown = sinon.spy(() => false);
+
+        listener.onCommand(
+          "fake_user",
+          "list", // TODO
+          "fake_message",
+          {},
+          {
+            sinceLastCommand: {
+              any: 0
+            }
+          }
+        );
+
+        // expect(listener.isCoolingDown.called).to.eql(true);
+        expect(listener.list.called).to.eql(true);
+        expect(listener.list.calledWith("fake_message")).to.eql(true);
+      });
+    });
+
     it('should swap on !swap', () => {
       listener.swap = sinon.spy();
 

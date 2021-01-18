@@ -7,11 +7,15 @@ const ComfyJS = require("comfy.js");
 
 const chatCommandRegExp = new RegExp(config.chatCommand);
 
+const chatListCommandRegExp = new RegExp(config.chatListCommand);
+
 const rewardNameRegExp = new RegExp(config.rewardNameRegExp);
 
 class TwitchShufflerListener {
   constructor(props = {}) {
     this.swap = props.swap;
+
+    this.list = props.list;
 
     this.lastCommandTimestamps = {};
   }
@@ -54,6 +58,10 @@ class TwitchShufflerListener {
         this.lastCommandTimestamps[user] = new Date().getTime();
         this.swap(message, `${user} via command`);
       }
+    }
+
+    if(chatListCommandRegExp.test(command)) {
+      this.say(await this.list(message));
     }
   }
 

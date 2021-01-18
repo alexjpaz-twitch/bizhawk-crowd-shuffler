@@ -41,12 +41,37 @@ const startServer = async () => {
     if(!rom) {
       return;
     }
-    const romName = rom.replace(/\./g, '_');
+    const romName = rom.replace(/\.[a-zA-Z]+$/, '')
 
     twitchShufflerListener.say(`/me Swapping to "${romName}" (${cause})`);
     sockets.forEach((sock) => {
       sock.write(`switchRom\t${rom}\n`);
     });
+  };
+
+  const list = async () => {
+    let roms = await romShuffler.fetchCurrentRoms();
+
+    let filteredRoms = roms
+      .map((rom) => rom.replace(/\.[a-zA-Z]+$/, ''))
+      .filter((rom) => rom !== 'DeleteMe')
+    ;
+
+    let total = filteredRoms.length;
+
+    let partition = filteredRoms;
+
+    const join = () => {
+      return partition.join(', ');
+    };
+
+    while(join().length >= 500) {
+      partition.pop();
+    }
+
+    let chatText = `ExtraLife ${join()} (${total}/${total})`;
+
+    return chatText;
   };
 
   const swap = async (index, cause) => {
@@ -78,7 +103,10 @@ const startServer = async () => {
   };
 
   const romShuffler = new RomShuffler();
-  const twitchShufflerListener = new TwitchShufflerListener({ swap });
+  const twitchShufflerListener = new TwitchShufflerListener({
+    swap,
+    list,
+  });
 
   logger.info(chalk.blue(`TCP Server is starting on ${config.host} ${config.port}`));
 
