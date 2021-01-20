@@ -4,6 +4,9 @@ const merge = require('lodash/merge');
 
 let config = null;
 
+const path = require('path');
+const fs = require('fs');
+
 const getEnvironmentConfig = () => {
   let environmentConfig = {
     port: process.env.PORT,
@@ -51,24 +54,52 @@ const getDefaultConfig = () => {
   return defaults;
 };
 
+const getSessionConfig = ({ session }) => {
+  let userConfig = {};
+
+  try {
+    const configPath = path.join('sessions', session, 'config.json');
+    userConfig = JSON.parse(fs.readFileSync(configPath).toString());
+  } catch(e) {
+    //
+  }
+
+  return userConfig;
+};
+
+function filterObject(obj) {
+    const ret = {};
+    Object.keys(obj)
+        .filter((key) => obj[key] !== undefined)
+        .forEach((key) => ret[key] = obj[key]);
+    return ret;
+}
+
 const resetConfig = (
-  defaultConfig = getDefaultConfig(),
-  environmentConfig = getEnvironmentConfig(),
-  userConfig = getUserConfig(),
+  defaultConfigProvider = () => getDefaultConfig(),
+  environmentConfigProvider = () => getEnvironmentConfig(),
+  userConfigProvider = () => getUserConfig(),
+  sessionConfigProvider = (s) => getSessionConfig(s),
 ) => {
   config = {};
 
   merge(
     config,
-    defaultConfig,
-    environmentConfig,
-    userConfig,
+    defaultConfigProvider(),
+    environmentConfigProvider(),
+    userConfigProvider(),
+  );
+
+  merge(
+    config,
+    getSessionConfig(config),
   );
 
   config.resetConfig = resetConfig;
   config.getDefaultConfig = getDefaultConfig;
   config.getUserConfig = getUserConfig;
   config.getEnvironmentConfig = getEnvironmentConfig;
+  config.getSessionConfig = getSessionConfig;
 
   return config;
 };
