@@ -57,6 +57,16 @@ class TwitchShufflerListener {
         if(!isCoolingDown) {
           this.lastCommandTimestamps['$$global$$'] = new Date().getTime();
           this.lastCommandTimestamps[user] = new Date().getTime();
+
+          if(!message || message === '') {
+            const matches = command.match(chatCommandRegExp);
+
+
+            if(matches[1]) {
+              message = matches[1];
+            }
+          }
+
           this.swap(message, `${user} via command`);
         }
       }

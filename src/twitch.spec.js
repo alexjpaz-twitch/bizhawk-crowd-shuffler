@@ -14,6 +14,84 @@ describe('twitch', () => {
       listener = new TwitchShufflerListener();
     });
 
+    describe('advanced regex', () => {
+      let listener;
+
+      beforeEach(() => {
+
+        listener = new TwitchShufflerListener({
+          chatCommand: 'swappy([0-9]*)'
+        });
+      });
+
+      it('should allow advanced regex usage', async () => {
+        listener.swap = sinon.spy();
+
+        listener.isCoolingDown = sinon.spy(() => false);
+
+        await listener.onCommand(
+          "fake_user",
+          "swappy",
+          "123",
+          {},
+          {
+            sinceLastCommand: {
+              any: 0
+            }
+          }
+        );
+
+        expect(listener.isCoolingDown.called).to.eql(true);
+        expect(listener.swap.called).to.eql(true);
+        expect(listener.swap.calledWith("123")).to.eql(true);
+      });
+
+      it('should allow the first match to be the argument for swap', async () => {
+        listener.swap = sinon.spy();
+
+        listener.isCoolingDown = sinon.spy(() => false);
+
+        await listener.onCommand(
+          "fake_user",
+          "swappy123",
+          "",
+          {},
+          {
+            sinceLastCommand: {
+              any: 0
+            }
+          }
+        );
+
+        expect(listener.isCoolingDown.called).to.eql(true);
+        expect(listener.swap.called).to.eql(true);
+        expect(listener.swap.calledWith("123")).to.eql(true);
+      });
+
+      it('should allow the first match to be the argument for swap', async () => {
+        listener.swap = sinon.spy();
+
+        listener.isCoolingDown = sinon.spy(() => false);
+
+        await listener.onCommand(
+          "fake_user",
+          "swappy",
+          null,
+          {},
+          {
+            sinceLastCommand: {
+              any: 0
+            }
+          }
+        );
+
+        expect(listener.isCoolingDown.called).to.eql(true);
+        expect(listener.swap.called).to.eql(true);
+        expect(listener.swap.calledWith(null)).to.eql(true);
+      });
+
+    });
+
     describe('list', () => {
       it('should list games on !list', () => {
         listener.list = sinon.spy();
@@ -58,6 +136,28 @@ describe('twitch', () => {
       expect(listener.isCoolingDown.called).to.eql(true);
       expect(listener.swap.called).to.eql(true);
       expect(listener.swap.calledWith("fake_message")).to.eql(true);
+    });
+
+    it('should NOT swap on invalid', () => {
+      listener.swap = sinon.spy();
+
+      listener.isCoolingDown = sinon.spy(() => false);
+
+      listener.onCommand(
+        "fake_user",
+        "invalid", // TODO
+        "fake_message",
+        {},
+        {
+          sinceLastCommand: {
+            any: 0
+          }
+        }
+      );
+
+      expect(listener.isCoolingDown.called).to.eql(false);
+      expect(listener.swap.called).to.eql(false);
+      expect(listener.swap.calledWith("fake_message")).to.eql(false);
     });
 
     it('should swap on swap redemption', () => {
