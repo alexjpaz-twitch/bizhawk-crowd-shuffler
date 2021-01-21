@@ -64,7 +64,7 @@ const getSessionConfig = ({ session }) => {
     return {};
   }
 
-  const configPath = path.join('sessions', session, 'config.json');
+  const configPath = path.join(process.cwd(), 'sessions', session, 'config.json');
   return loadConfigFromFile(configPath);
 };
 
