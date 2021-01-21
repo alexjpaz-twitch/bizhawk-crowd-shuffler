@@ -7,6 +7,19 @@ let config = null;
 const path = require('path');
 const fs = require('fs');
 
+const loadConfigFromFile = (configPath) => {
+  let newConfig = {};
+
+  try {
+    newConfig = JSON.parse(fs.readFileSync(configPath).toString());
+  } catch(e) {
+    logger.warn("Failed to load config from file", e.message);
+  }
+
+  return newConfig;
+
+};
+
 const getEnvironmentConfig = () => {
   let environmentConfig = {
     port: process.env.PORT,
@@ -21,15 +34,7 @@ const getEnvironmentConfig = () => {
 };
 
 const getUserConfig = () => {
-  let userConfig = {};
-
-  try {
-    userConfig = require(process.cwd()+'/config.json');
-  } catch(e) {
-    //
-  }
-
-  return userConfig;
+  return loadConfigFromFile(path.join(process.cwd(), "config.json"));
 };
 
 const getDefaultConfig = () => {
@@ -55,16 +60,12 @@ const getDefaultConfig = () => {
 };
 
 const getSessionConfig = ({ session }) => {
-  let userConfig = {};
-
-  try {
-    const configPath = path.join('sessions', session, 'config.json');
-    userConfig = JSON.parse(fs.readFileSync(configPath).toString());
-  } catch(e) {
-    //
+  if(!session) {
+    return {};
   }
 
-  return userConfig;
+  const configPath = path.join('sessions', session, 'config.json');
+  return loadConfigFromFile(configPath);
 };
 
 function filterObject(obj) {
@@ -109,5 +110,7 @@ resetConfig();
 console.log(JSON.stringify(config, null, 2));
 
 module.exports = config;
+
+module.exports.load
 
 
