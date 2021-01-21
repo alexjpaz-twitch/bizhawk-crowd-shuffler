@@ -5,7 +5,6 @@ const { Server } = require('./server');
 
 describe('Server', () => {
   let server;
-  let client;
   let port;
 
   beforeEach(async () => {
@@ -16,8 +15,8 @@ describe('Server', () => {
     port = server.server.address().port;
   });
 
-  afterEach(() => {
-    server.stop();
+  afterEach(async () => {
+    await server.stop();
   });
 
   it('should add a socket to the array on the connection', (done) => {

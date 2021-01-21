@@ -39,7 +39,15 @@ class Server {
   }
 
   async stop() {
-    this.server.close();
+    return new Promise((res, reject) => {
+      this.sockets.forEach((sock) => {
+        sock.destroy();
+      });
+
+      this.server.close(() => {
+        res(this.server);
+      });
+    });
   }
 }
 module.exports = {

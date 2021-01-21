@@ -10,7 +10,7 @@ const net = require('net');
 const { RomShuffler } = require('./swap');
 const { TwitchShufflerListener } = require('./twitch')
 
-const server = net.createServer();
+const { Server } = require('./server');
 
 const fs = require('fs').promises;
 
@@ -40,7 +40,7 @@ const startBizhawk = (port, host) => {
 };
 
 const startServer = async () => {
-  let sockets = [];
+  let server = new Server();
 
   const switchRom = (rom, cause) => {
     if(!rom) {
@@ -49,9 +49,10 @@ const startServer = async () => {
     const romName = rom.replace(/\.[a-zA-Z]+$/, '')
 
     twitchShufflerListener.say(`/me Swapping to "${romName}" (${cause})`);
-    sockets.forEach((sock) => {
-      sock.write(`switchRom\t${rom}\n`);
-    });
+
+    const input = `switchRom\t${rom}\n`;
+
+    server.write(input);
   };
 
   const list = async () => {
@@ -119,43 +120,11 @@ const startServer = async () => {
 
   logger.info(chalk.blue(`TCP Server is starting on ${config.host} ${config.port}`));
 
-  server.listen(config.port, config.host, async () => {
-
-    logger.info(chalk.green(`Shuffler Server Started`));
-
-    await startBizhawk(config.port, config.host);
-    await twitchShufflerListener.start();
-    await startTimer();
-
-    server.on('connection', function(sock) {
-      sockets.push(sock);
-
-      const ping = () => {
-        sockets.forEach((sock) => {
-          sock.write("ping\n");
-        });
-
-        setTimeout(ping, 2000);
-      };
-
-      ping();
-
-      sock.on('close', function(data) {
-        let index = sockets.findIndex(function(o) {
-          return o.remoteAddress === sock.remoteAddress && o.remotePort === sock.remotePort;
-        })
-        if (index !== -1) sockets.splice(index, 1);
-        console.log('CLOSED: ' + sock.remoteAddress + ' ' + sock.remotePort);
-      });
-    });
-
-    server.on('data', function(data) {
-      logger.info(chalk.purple(data));
-    });
-
-    });
-
-}
+  await server.start();
+  await startBizhawk(config.port, config.host);
+  await twitchShufflerListener.start();
+  await startTimer();
+};
 
 async function main() {
   try {
