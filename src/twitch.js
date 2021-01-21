@@ -5,12 +5,6 @@ const config = require('./config');
 
 const ComfyJS = require("comfy.js");
 
-const chatCommandRegExp = new RegExp(config.chatCommand);
-
-const chatListCommandRegExp = new RegExp(config.chatListCommand);
-
-const rewardNameRegExp = new RegExp(config.rewardNameRegExp);
-
 class TwitchShufflerListener {
   constructor(props = {}) {
     this.swap = props.swap;
@@ -18,6 +12,10 @@ class TwitchShufflerListener {
     this.list = props.list;
 
     this.lastCommandTimestamps = {};
+
+    this.chatCommand = props.chatCommand || config.chatCommand;
+    this.redemptionName = props.redemptionName || config.redemptionName;
+    this.chatListCommand = props.chatListCommand || config.chatListCommand;
   }
 
   async say(text) {
@@ -50,24 +48,36 @@ class TwitchShufflerListener {
   }
 
   async onCommand( user, command, message, flags, extra ) {
-    if(chatCommandRegExp.test(command)) {
-      const isCoolingDown = this.isCoolingDown(user, command, message, flags, extra);
+    if(this.chatCommand) {
+      const chatCommandRegExp = new RegExp(this.chatCommand);
 
-      if(!isCoolingDown) {
-        this.lastCommandTimestamps['$$global$$'] = new Date().getTime();
-        this.lastCommandTimestamps[user] = new Date().getTime();
-        this.swap(message, `${user} via command`);
+      if(chatCommandRegExp.test(command)) {
+        const isCoolingDown = this.isCoolingDown(user, command, message, flags, extra);
+
+        if(!isCoolingDown) {
+          this.lastCommandTimestamps['$$global$$'] = new Date().getTime();
+          this.lastCommandTimestamps[user] = new Date().getTime();
+          this.swap(message, `${user} via command`);
+        }
       }
     }
 
-    if(chatListCommandRegExp.test(command)) {
-      this.say(await this.list(message));
+    if(this.chatListCommand) {
+      const chatListCommandRegExp = new RegExp(this.chatListCommand);
+
+      if(chatListCommandRegExp.test(command)) {
+        this.say(await this.list(message));
+      }
     }
   }
 
   async onReward( user, reward, cost, extra ) {
-    if(rewardNameRegExp.test(reward)) {
-      this.swap(extra, `${user} via reward`);
+    if(this.redemptionName) {
+      const matchesRemption = new RegExp(this.redemptionName).test(reward);
+
+      if(matchesRemption) {
+        this.swap(extra, `${user} via reward`);
+      }
     }
   }
 

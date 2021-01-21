@@ -92,6 +92,20 @@ describe('twitch', () => {
       expect(listener.swap.called).to.eql(true);
       expect(listener.swap.calledWith("fake_message")).to.eql(true);
     });
+
+    it('should NOT swap on invalid swap redemption', () => {
+      listener.swap = sinon.spy();
+
+      listener.onReward(
+        "fake_user",
+        "__INVALID__", // TODO
+        -1,
+        "fake_message"
+      );
+
+      expect(listener.swap.called).to.eql(false);
+      expect(listener.swap.calledWith("fake_message")).to.eql(false);
+    });
   });
 
   describe('cooldown', () => {
