@@ -1,5 +1,5 @@
 dist/
 node_modules/
 CurrentRoms/
-config.json
+./config.json
 *.exe
