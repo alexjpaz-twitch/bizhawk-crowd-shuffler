@@ -1,5 +1,7 @@
 const logger = console;
 
+const merge = require('lodash/merge');
+
 let config = null;
 
 const getEnvironmentConfig = () => {
@@ -56,7 +58,8 @@ const resetConfig = (
 ) => {
   config = {};
 
-  Object.assign(config,
+  merge(
+    config,
     defaultConfig,
     environmentConfig,
     userConfig,
