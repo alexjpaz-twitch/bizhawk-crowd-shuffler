@@ -36,7 +36,7 @@ class BizhawkMediator {
   }
 
   async list() {
-    let roms = await romShuffler.fetchCurrentRoms();
+    let roms = await this.romShuffler.fetchCurrentRoms();
 
     let filteredRoms = roms
       .map((rom) => rom.replace(/\.[a-zA-Z]+$/, ''))

@@ -31,6 +31,24 @@ class Application {
       port: this.config.port,
     });
 
+    return bizhawkMediator;
+  }
+
+  async run() {
+    // 1. Start a socket server. This is the socket server that Bizhawk will listen to
+    let server = new SocketServer({
+      host: this.config.host, // Since this is internal maybe just bind to any available port
+      port: this.config.port, //
+    });
+
+    logger.info(chalk.blue(`TCP Server is starting on ${this.config.host} ${this.config.port}`));
+
+    await server.start();
+
+    // 2. Create a RomShuffler. This is a service to manage the rom state
+    const romShuffler = new RomShuffler();
+
+    // 3. Create a Mediator. This will mediate state between the rom shuffler, twitch, and bizhawk.
     const say = (message) => ComfyJS.Say(message);
 
     const bizhawkMediator = new BizhawkMediator({
@@ -39,36 +57,16 @@ class Application {
       say,
     });
 
-    await server.start();
-
-    return bizhawkMediator;
-  }
-
-  async run() {
-    // 1. Start a socket server. This is the socket server that Bizhawk will listen to
-    let server = new Server({
-      host: this.config.host,
-      port: this.config.port,
-    });
-
-    await server.start();
-
-    // 2. Create a RomShuffler. This is a service to manage the rom state
-    const romShuffler = new RomShuffler();
-
-    //const bizhawkMediator = await this.buildBizhawkMediator(romShuffler);
-
     // 3. Twitch shuffler listener. This listens for !swap command and calls injected functions
     const twitchShufflerListener = new TwitchShufflerListener({
       swap: (index, cause) => bizhawkMediator.swap(index, cause),
       list: () => bizhawkMediator.list(),
     });
 
-    //logger.info(chalk.blue(`TCP Server is starting on ${this.config.host} ${this.config.port}`));
+    await twitchShufflerListener.start();
 
-    //await twitchShufflerListener.start();
-
-    //await bizhawkMediator.startBizhawkProcess(this.config.port, this.config.host);
+    // 4. Finally start the bizhawk process
+    await bizhawkMediator.startBizhawkProcess(this.config.port, this.config.host);
   }
 
   static async main() {
