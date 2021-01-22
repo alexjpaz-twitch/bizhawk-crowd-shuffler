@@ -11,6 +11,6 @@ describe('Application', () => {
   it('should construct a mediator', async () => {
     const app =  new Application();
 
-    await buildBizhawkMediator();
+    await app.buildBizhawkMediator();
   });
 });

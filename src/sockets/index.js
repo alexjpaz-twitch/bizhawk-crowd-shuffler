@@ -1,6 +1,6 @@
 const net = require('net');
 
-class Server {
+class SocketServer {
 
   constructor(props = {}) {
     this.port = props.port;
@@ -51,5 +51,5 @@ class Server {
   }
 }
 module.exports = {
-  Server
+  SocketServer
 };

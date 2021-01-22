@@ -10,7 +10,7 @@ const { BizhawkMediator } = require('./bizhawkMediator');
 const { RomShuffler } = require('./swap');
 const { TwitchShufflerListener } = require('./twitch')
 
-const { Server } = require('./server');
+const { SocketServer } = require('./sockets');
 
 const defaultConfiguration = () => ({
   config
@@ -45,20 +45,30 @@ class Application {
   }
 
   async run() {
+    // 1. Start a socket server. This is the socket server that Bizhawk will listen to
+    let server = new Server({
+      host: this.config.host,
+      port: this.config.port,
+    });
+
+    await server.start();
+
+    // 2. Create a RomShuffler. This is a service to manage the rom state
     const romShuffler = new RomShuffler();
 
-    const bizhawkMediator = await this.buildBizhawkMediator(romShuffler);
+    //const bizhawkMediator = await this.buildBizhawkMediator(romShuffler);
 
+    // 3. Twitch shuffler listener. This listens for !swap command and calls injected functions
     const twitchShufflerListener = new TwitchShufflerListener({
       swap: (index, cause) => bizhawkMediator.swap(index, cause),
       list: () => bizhawkMediator.list(),
     });
 
-    logger.info(chalk.blue(`TCP Server is starting on ${this.config.host} ${this.config.port}`));
+    //logger.info(chalk.blue(`TCP Server is starting on ${this.config.host} ${this.config.port}`));
 
-    await twitchShufflerListener.start();
+    //await twitchShufflerListener.start();
 
-    await bizhawkMediator.startBizhawkProcess(this.config.port, this.config.host);
+    //await bizhawkMediator.startBizhawkProcess(this.config.port, this.config.host);
   }
 
   static async main() {

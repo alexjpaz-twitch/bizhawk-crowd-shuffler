@@ -1,14 +1,14 @@
 const { expect } = require('chai');
 const net = require('net');
 
-const { Server } = require('./server');
+const { SocketServer } = require('./server');
 
-describe('Server', () => {
+describe('SocketServer', () => {
   let server;
   let port;
 
   beforeEach(async () => {
-    server = new Server();
+    server = new SocketServer();
 
     await server.start();
 
