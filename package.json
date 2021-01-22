@@ -4,18 +4,21 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "body-parser": "^1.19.0",
     "comfy.js": "^1.1.6",
+    "express": "^4.17.1",
     "open": "^7.3.0",
     "pkg": "^4.4.9"
   },
   "devDependencies": {
     "chai": "^4.2.0",
     "mocha": "^8.2.1",
-    "sinon": "^9.2.2"
+    "sinon": "^9.2.2",
+    "supertest": "^6.1.1"
   },
   "scripts": {
     "start": "node src/",
-    "test": "mocha 'src/*.spec.js'",
+    "test": "mocha 'src/**/*.spec.js'",
     "package": "pkg -t node14-win-x64 --out-path=./ src/bin/bizhawk-crowd-shuffler"
   },
   "keywords": [],
