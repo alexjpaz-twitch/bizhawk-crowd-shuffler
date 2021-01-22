@@ -26,7 +26,10 @@ class Application {
   }
 
   async buildBizhawkMediator(romShuffler) {
-    let server = new Server();
+    let server = new Server({
+      host: this.config.host,
+      port: this.config.port,
+    });
 
     const say = (message) => ComfyJS.Say(message);
 
@@ -36,13 +39,15 @@ class Application {
       say,
     });
 
+    await server.start();
+
     return bizhawkMediator;
   }
 
   async run() {
     const romShuffler = new RomShuffler();
 
-    const bizhawkMediator = buildBizhawkMediator(romShuffler);
+    const bizhawkMediator = await this.buildBizhawkMediator(romShuffler);
 
     const twitchShufflerListener = new TwitchShufflerListener({
       swap: (index, cause) => bizhawkMediator.swap(index, cause),
@@ -51,7 +56,6 @@ class Application {
 
     logger.info(chalk.blue(`TCP Server is starting on ${this.config.host} ${this.config.port}`));
 
-    await server.start();
     await twitchShufflerListener.start();
 
     await bizhawkMediator.startBizhawkProcess(this.config.port, this.config.host);

@@ -2,14 +2,21 @@ const logger = require('./logger');
 const chalk = require('chalk');
 const open = require('open');
 
+const { Server } = require('./server');
+
 class BizhawkMediator {
   constructor(props = {}) {
-    this.server = props.server;
+    this.server = props.server || new Server();
     this.romShuffler = props.romShuffler;
     this.say = props.say;
   }
 
-  async startBizhawkProcess(port, host) {
+  async startSocketServer() {
+    await this.server.start();
+  }
+
+  async startBizhawkProcess() {
+    const { port, host } = this.server;
     // TODO
     const isWin = process.platform === "win32";
     if(isWin) {
