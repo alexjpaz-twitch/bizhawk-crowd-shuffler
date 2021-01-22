@@ -1,13 +1,10 @@
 const config = require('./config');
-const assert = require('assert');
+
+const logger = require('./logger');
+
 const chalk = require('chalk');
 
 const ComfyJS = require("comfy.js");
-
-const logger = console;
-
-const open = require('open');
-const net = require('net');
 
 const { BizhawkMediator } = require('./bizhawkMediator');
 const { RomShuffler } = require('./swap');
@@ -15,66 +12,66 @@ const { TwitchShufflerListener } = require('./twitch')
 
 const { Server } = require('./server');
 
-const fs = require('fs').promises;
+const defaultConfiguration = () => ({
+  config
+});
 
-const precondition = (expression, message) => {
-  try {
-    assert(expression)
-  } catch(e) {
-    const error = new Error(message || e.message);
-    throw error;
+class Application {
+  constructor(args = defaultConfiguration()) {
+    this.config = args.config;
+    this.environment = {};
   }
-}
 
-const startBizhawk = (port, host) => {
-  // TODO
-  const isWin = process.platform === "win32";
-  if(isWin) {
+  async bootstrap() {
+  }
 
-    if(!process.env.session) {
-      process.env.session = config.session;
+  async buildBizhawkMediator(romShuffler) {
+    let server = new Server();
+
+    const say = (message) => ComfyJS.Say(message);
+
+    const bizhawkMediator = new BizhawkMediator({
+      server,
+      romShuffler,
+      say,
+    });
+
+    return bizhawkMediator;
+  }
+
+  async run() {
+    const romShuffler = new RomShuffler();
+
+    const bizhawkMediator = buildBizhawkMediator(romShuffler);
+
+    const twitchShufflerListener = new TwitchShufflerListener({
+      swap: (index, cause) => bizhawkMediator.swap(index, cause),
+      list: () => bizhawkMediator.list(),
+    });
+
+    logger.info(chalk.blue(`TCP Server is starting on ${this.config.host} ${this.config.port}`));
+
+    await server.start();
+    await twitchShufflerListener.start();
+
+    await bizhawkMediator.startBizhawkProcess(this.config.port, this.config.host);
+  }
+
+  static async main() {
+    const app = new Application();
+
+    try {
+      await app.bootstrap();
+      await app.run();
+    } catch(e) {
+      logger.error(e);
+      process.exit(1);
     }
-
-    open('Start_BizHawk_Listen_To_Crowd_Shuffler.bat');
-    logger.info(chalk.green("Bizhawk started"));
-  } else {
-    logger.error(chalk.yellow("Script not run in Windows. Starting the BizHawk process is a no-op: "));
-  }
-};
-
-const startServer = async () => {
-  let server = new Server();
-
-  const say = (message) => ComfyJS.Say(message);
-
-  const romShuffler = new RomShuffler();
-
-  const bizhawkMediator = new BizhawkMediator({
-    server,
-    romShuffler,
-    say,
-  });
-
-  const twitchShufflerListener = new TwitchShufflerListener({
-    swap: (index, cause) => bizhawkMediator.swap(index, cause),
-    list: () => bizhawkMediator.list(),
-  });
-
-  logger.info(chalk.blue(`TCP Server is starting on ${config.host} ${config.port}`));
-
-  await server.start();
-  await twitchShufflerListener.start();
-
-  await startBizhawk(config.port, config.host);
-};
-
-async function main() {
-  try {
-    await startServer();
-  } catch(e) {
-    logger.error(e);
-    process.exit(1);
   }
 }
 
-main();
+if (require.main === module) {
+    Application.main();
+}
+
+exports.Application = Application;

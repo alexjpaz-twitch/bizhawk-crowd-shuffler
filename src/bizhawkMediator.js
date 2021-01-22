@@ -1,8 +1,28 @@
+const logger = require('./logger');
+const chalk = require('chalk');
+const open = require('open');
+
 class BizhawkMediator {
   constructor(props = {}) {
     this.server = props.server;
     this.romShuffler = props.romShuffler;
     this.say = props.say;
+  }
+
+  async startBizhawkProcess(port, host) {
+    // TODO
+    const isWin = process.platform === "win32";
+    if(isWin) {
+
+      if(!process.env.session) {
+        process.env.session = config.session;
+      }
+
+      open('Start_BizHawk_Listen_To_Crowd_Shuffler.bat');
+      logger.info(chalk.green("Bizhawk started"));
+    } else {
+      logger.error(chalk.yellow("Script not run in Windows. Starting the BizHawk process is a no-op: "));
+    }
   }
 
   async say() {
