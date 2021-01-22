@@ -1,6 +1,24 @@
 const logger = console;
 
+const merge = require('lodash/merge');
+
 let config = null;
+
+const path = require('path');
+const fs = require('fs');
+
+const loadConfigFromFile = (configPath) => {
+  let newConfig = {};
+
+  try {
+    newConfig = JSON.parse(fs.readFileSync(configPath).toString());
+  } catch(e) {
+    logger.warn("Failed to load config from file", e.message);
+  }
+
+  return newConfig;
+
+};
 
 const getEnvironmentConfig = () => {
   let environmentConfig = {
@@ -16,15 +34,7 @@ const getEnvironmentConfig = () => {
 };
 
 const getUserConfig = () => {
-  let userConfig = {};
-
-  try {
-    userConfig = require(process.cwd()+'/config.json');
-  } catch(e) {
-    //
-  }
-
-  return userConfig;
+  return loadConfigFromFile(path.join(process.cwd(), "config.json"));
 };
 
 const getDefaultConfig = () => {
@@ -49,23 +59,48 @@ const getDefaultConfig = () => {
   return defaults;
 };
 
+const getSessionConfig = ({ session }) => {
+  if(!session) {
+    return {};
+  }
+
+  const configPath = path.join(process.cwd(), 'sessions', session, 'config.json');
+  return loadConfigFromFile(configPath);
+};
+
+function filterObject(obj) {
+    const ret = {};
+    Object.keys(obj)
+        .filter((key) => obj[key] !== undefined)
+        .forEach((key) => ret[key] = obj[key]);
+    return ret;
+}
+
 const resetConfig = (
-  defaultConfig = getDefaultConfig(),
-  environmentConfig = getEnvironmentConfig(),
-  userConfig = getUserConfig(),
+  defaultConfigProvider = () => getDefaultConfig(),
+  environmentConfigProvider = () => getEnvironmentConfig(),
+  userConfigProvider = () => getUserConfig(),
+  sessionConfigProvider = (s) => getSessionConfig(s),
 ) => {
   config = {};
 
-  Object.assign(config,
-    defaultConfig,
-    environmentConfig,
-    userConfig,
+  merge(
+    config,
+    defaultConfigProvider(),
+    environmentConfigProvider(),
+    userConfigProvider(),
+  );
+
+  merge(
+    config,
+    getSessionConfig(config),
   );
 
   config.resetConfig = resetConfig;
   config.getDefaultConfig = getDefaultConfig;
   config.getUserConfig = getUserConfig;
   config.getEnvironmentConfig = getEnvironmentConfig;
+  config.getSessionConfig = getSessionConfig;
 
   return config;
 };
@@ -75,5 +110,7 @@ resetConfig();
 console.log(JSON.stringify(config, null, 2));
 
 module.exports = config;
+
+module.exports.load
 
 
