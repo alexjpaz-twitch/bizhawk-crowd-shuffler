@@ -10,7 +10,5 @@ describe('Application', () => {
 
   it('should construct a mediator', async () => {
     const app =  new Application();
-
-    await app.buildBizhawkMediator();
   });
 });

@@ -25,15 +25,6 @@ class Application {
   async bootstrap() {
   }
 
-  async buildBizhawkMediator(romShuffler) {
-    let server = new Server({
-      host: this.config.host,
-      port: this.config.port,
-    });
-
-    return bizhawkMediator;
-  }
-
   async run() {
     // 1. Start a socket server. This is the socket server that Bizhawk will listen to
     let server = new SocketServer({
