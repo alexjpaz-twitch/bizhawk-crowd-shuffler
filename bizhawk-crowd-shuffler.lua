@@ -21,13 +21,13 @@ function commands.switchRom(rom)
     print("DEBUG: switchRom=" .. rom)
 
     if(currentGame ) then
-       savestate.save(config.savePath .. currentGame  .. ".save")
+       savestate.save(config.savePath .. currentGame  .. ".state")
     end
 
     local nextGame = rom
 
     client.openrom(config.gamePath .. nextGame)
-    savestate.load(config.savePath ..  nextGame .. ".save")
+    savestate.load(config.savePath ..  nextGame .. ".state")
 
     userdata.set("currentGame", nextGame)
 end
@@ -168,9 +168,9 @@ else
 
         commands.switchRom("bar.nes")
 
-        assert(savestate.load__args == config.savePath .. "bar.nes.save")
+        assert(savestate.load__args == config.savePath .. "bar.nes.state")
         assert(userdata.set__value == "bar.nes")
-        assert(savestate.save__args == config.savePath .. "foo.nes.save")
+        assert(savestate.save__args == config.savePath .. "foo.nes.state")
         assert(client.openrom__args == config.gamePath .. "bar.nes")
     end
 
