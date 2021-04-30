@@ -117,6 +117,43 @@ describe('swap', () => {
     expect(rom).to.eql('1_Foo.nes');
   });
 
+  it('should return a specific rom if it matches a filter value (hack to fix the numeral code issue', async () => {
+
+    const shuffler = new RomShuffler();
+
+    shuffler.fetchCurrentRoms = sinon.spy(() => [
+      '1_Foo.nes',
+      '11111_Bar.nes',
+      '11_Bar.nes',
+      '11_Bar.nes',
+      '11111111_Bar.nes',
+      '11_Bar.nes',
+      '11_Bar.nes',
+      '111_Bar.nes',
+      '111_Bar.nes',
+      '111_Bar.nes',
+    ]);
+
+    const rom = await shuffler.shuffle('1');
+
+    expect(rom).to.eql('1_Foo.nes');
+  });
+
+  it('should return a specific rom if it matches a filter value (token separator parts)', async () => {
+
+    const shuffler = new RomShuffler();
+
+    shuffler.fetchCurrentRoms = sinon.spy(() => [
+      '1_Foo.nes',
+      '2_Bar.nes'
+    ]);
+
+    const rom = await shuffler.shuffle('Foo');
+
+    expect(rom).to.eql('1_Foo.nes');
+  });
+
+
 
   it('should be random on null', async () => {
 

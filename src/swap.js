@@ -7,6 +7,8 @@ const config = require('./config');
 
 const isRNG = (t) => new RegExp(config.redepmtionRandomText).test(t);
 
+const TOKEN_SEPARATOR = "_";
+
 class RomShuffler {
   constructor() {
     this.state = {};
@@ -32,7 +34,24 @@ class RomShuffler {
 
       if(index && index !== '' && !isRNG(index)) {
         roms = roms
-          .filter((rom) => rom.toLowerCase().startsWith(index.toLowerCase()));
+          .filter((rom) => {
+            const p = rom.split(TOKEN_SEPARATOR);
+
+            console.log(p, index);
+            if(p[0] && p[0] === index) {
+              return true;
+            }
+
+            if(p[1] && p[1].startsWith(index)) {
+              return true;
+            }
+
+            return rom.toLowerCase().startsWith(index.toLowerCase());
+          });
+
+        if(roms.length > 1) {
+          roms = roms.filter((rom) => rom.split(TOKEN_SEPARATOR)[0] === index);
+        }
       } else {
         roms = roms
           .filter((rom) => rom !== this.state.currentRom)
