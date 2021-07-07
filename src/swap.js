@@ -28,6 +28,11 @@ class RomShuffler {
         index = null;
       }
 
+      if(config.requireInput && !index) {
+        logger.info(chalk.grey(`Swap ignored since requireInput is true`));
+        return;
+      }
+
       if(index) {
         index = index.trim();
       }
