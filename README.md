@@ -6,7 +6,9 @@
 
 ## Setup
 
-1. Install the [latest development version](https://ci.appveyor.com/project/zeromus/bizhawk-udexo/build/artifacts) of BizHawk (> 2.5.3 should be compatible)
+Note this has only been tested with Bizhawk 2.5.x releases
+
+1. Install a [2.5.x version](https://github.com/TASVideos/BizHawk/releases/tag/2.5.2) of BizHawk.
 
 2. Download the latest release of this project [bizhawk-crowd-shuffler](https://github.com/alexjpaz-twitch/bizhawk-crowd-shuffler/releases/latest).
 
