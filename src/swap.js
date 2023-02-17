@@ -12,6 +12,8 @@ const TOKEN_SEPARATOR = "_";
 class RomShuffler {
   constructor() {
     this.state = {};
+
+    this.ignoreRomsPattern = config.ignoreRomsPattern;
     this.randomIfNoMatch = config.randomIfNoMatch;
     this.randomOnly = config.randomOnly;
   }
@@ -57,6 +59,14 @@ class RomShuffler {
       } else {
         roms = roms
           .filter((rom) => rom !== this.state.currentRom)
+          .filter((rom) => {
+            if(!config.ignoreRomsPattern) {
+              return true;
+            } else {
+              const ignoreRomsRegExp = new RegExp(this.ignoreRomsPattern);
+              return (ignoreRomsRegExp.test(rom) === false);
+            }
+          })
           .filter((rom) => rom !== 'DeleteMe');
       }
 

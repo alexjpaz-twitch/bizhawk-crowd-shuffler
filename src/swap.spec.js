@@ -214,7 +214,6 @@ describe('swap', () => {
   it('should be random on empty', async () => {
 
     const shuffler = new RomShuffler();
-
     shuffler.state = {
       currentRom: '1_Foo.nes'
     };
@@ -227,6 +226,21 @@ describe('swap', () => {
     const rom = await shuffler.shuffle('   ');
 
     expect(rom).to.eql('2_Bar.nes');
+  });
+
+  it('should ignore roms if the config is supplied', async () => {
+
+    const shuffler = new RomShuffler();
+    shuffler.ignoreRomsPattern = "^.bin$";
+
+    shuffler.fetchCurrentRoms = sinon.spy(() => [
+      '2_Bar.cue',
+      '2_Bar.bin'
+    ]);
+
+    const rom = await shuffler.shuffle('2');
+
+    expect(rom).to.eql('2_Bar.cue');
   });
 
   it('should be random on no match IF the randomIfNoMatch flag is true', async () => {
