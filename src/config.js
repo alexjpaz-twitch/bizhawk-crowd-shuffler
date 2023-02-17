@@ -49,6 +49,7 @@ const getDefaultConfig = () => {
     "redemptionName": "^swap$",
     "redepmtionRandomText": "^rng$",
     "randomOnly": false,
+    "randomIfNoMatch": false,
     "session": "default",
     "timer": {
       "min": 5000,

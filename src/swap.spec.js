@@ -211,6 +211,61 @@ describe('swap', () => {
     expect(rom).to.eql('2_Bar.nes');
   });
 
+  it('should be random on empty', async () => {
+
+    const shuffler = new RomShuffler();
+
+    shuffler.state = {
+      currentRom: '1_Foo.nes'
+    };
+
+    shuffler.fetchCurrentRoms = sinon.spy(() => [
+      '1_Foo.nes',
+      '2_Bar.nes'
+    ]);
+
+    const rom = await shuffler.shuffle('   ');
+
+    expect(rom).to.eql('2_Bar.nes');
+  });
+
+  it('should be random on no match IF the randomIfNoMatch flag is true', async () => {
+
+    const shuffler = new RomShuffler();
+    shuffler.randomIfNoMatch = true;
+
+    shuffler.state = {
+      currentRom: '1_Foo.nes'
+    };
+
+    shuffler.fetchCurrentRoms = sinon.spy(() => [
+      '1_Foo.nes',
+      '2_Bar.nes'
+    ]);
+
+    const rom = await shuffler.shuffle('X_X_X');
+
+    expect(rom).to.eql('2_Bar.nes');
+  });
+
+  it('should be NULL on no match IF the randomIfNoMatch flag is false', async () => {
+
+    const shuffler = new RomShuffler();
+
+    shuffler.state = {
+      currentRom: '1_Foo.nes'
+    };
+
+    shuffler.fetchCurrentRoms = sinon.spy(() => [
+      '1_Foo.nes',
+      '2_Bar.nes'
+    ]);
+
+    const rom = await shuffler.shuffle('X_X_X');
+
+    expect(rom).to.eql(undefined);
+  });
+
   it('should be random on "rng"', async () => {
 
     const shuffler = new RomShuffler();
