@@ -4,7 +4,6 @@ exports.filterRomsFromPattern = (ignoreRomsPattern) => (rom) => {
         return true;
     } else {
         const ignoreRomsRegExp = new RegExp(ignoreRomsPattern);
-        console.log(ignoreRomsRegExp.test(rom), rom)
         return (ignoreRomsRegExp.test(rom) === false);
     }
 }
