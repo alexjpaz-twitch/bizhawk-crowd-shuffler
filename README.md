@@ -77,6 +77,10 @@ The shuffler can be configured by adding a `config.json` file (an example is pro
 
 > Ignore any user filter and just uses a random rom
 
+#### randomIfNoMatch
+
+> Choose a random rom if there is no match rather than ignore the command
+
 #### chatCooldownGlobal
 
 > Global chat cooldown (defaukt: 60000)

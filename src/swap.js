@@ -12,6 +12,8 @@ const TOKEN_SEPARATOR = "_";
 class RomShuffler {
   constructor() {
     this.state = {};
+    this.randomIfNoMatch = config.randomIfNoMatch;
+    this.randomOnly = config.randomOnly;
   }
 
   async fetchCurrentRoms() {
@@ -24,7 +26,7 @@ class RomShuffler {
     try {
       let roms = await this.fetchCurrentRoms();
 
-      if(config.randomOnly) {
+      if(this.randomOnly) {
         index = null;
       }
 
@@ -58,7 +60,11 @@ class RomShuffler {
           .filter((rom) => rom !== 'DeleteMe');
       }
 
-      const rom = roms[Math.floor(Math.random() * roms.length)];
+      let rom = roms[Math.floor(Math.random() * roms.length)];
+
+      if(!rom && this.randomIfNoMatch) {
+        rom = await this.shuffle(null);
+      } 
       this.state.currentRom = rom;
 
       logger.info(chalk.green(`Switching to ${this.state.currentRom}`));
