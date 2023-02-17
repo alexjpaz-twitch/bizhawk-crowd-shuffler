@@ -46,6 +46,7 @@ const getDefaultConfig = () => {
     "chatListCommand": "^list$",
     "chatCooldownGlobal": "60000",
     "chatCooldownUser": "60000",
+    "ignoreRomsPattern": "\.bin$",
     "redemptionName": "^swap$",
     "redepmtionRandomText": "^rng$",
     "randomOnly": false,
