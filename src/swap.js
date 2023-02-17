@@ -4,6 +4,7 @@ const fs = require('fs').promises;
 const chalk = require('chalk');
 
 const config = require('./config');
+const common = require('./common');
 
 const isRNG = (t) => new RegExp(config.redepmtionRandomText).test(t);
 
@@ -12,6 +13,8 @@ const TOKEN_SEPARATOR = "_";
 class RomShuffler {
   constructor() {
     this.state = {};
+
+    this.ignoreRomsPattern = config.ignoreRomsPattern;
     this.randomIfNoMatch = config.randomIfNoMatch;
     this.randomOnly = config.randomOnly;
   }
@@ -36,6 +39,7 @@ class RomShuffler {
 
       if(index && index !== '' && !isRNG(index)) {
         roms = roms
+          .filter(common.filterRomsFromPattern(this.ignoreRomsPattern))
           .filter((rom) => {
             const p = rom.split(TOKEN_SEPARATOR);
 
@@ -57,6 +61,7 @@ class RomShuffler {
       } else {
         roms = roms
           .filter((rom) => rom !== this.state.currentRom)
+          .filter(common.filterRomsFromPattern(this.ignoreRomsPattern))
           .filter((rom) => rom !== 'DeleteMe');
       }
 

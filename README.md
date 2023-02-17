@@ -69,6 +69,10 @@ The shuffler can be configured by adding a `config.json` file (an example is pro
 
 > Configures the list chat command (e.g !list) to respond to (default: ^list$)
 
+#### ignoreRomsPattern
+
+> Filter out certain files in the current roms folder from being listed and used
+
 #### redemptionName
 
 > Configures the redpemption name to respond to (default: ^swap$)

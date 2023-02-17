@@ -59,6 +59,7 @@ const startServer = async () => {
 
     let filteredRoms = roms
       .map((rom) => rom.replace(/\.[a-zA-Z]+$/, ''))
+      .filter(common.filterRomsFromPattern(this.ignoreRomsPattern))
       .filter((rom) => rom !== 'DeleteMe')
     ;
 
