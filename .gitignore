@@ -1,5 +1,6 @@
 dist/
 node_modules/
 CurrentRoms/
+!sessions/default/CurrentRoms/DeleteMe
 ./config.json
 *.exe
