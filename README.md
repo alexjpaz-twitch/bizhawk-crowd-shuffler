@@ -87,11 +87,11 @@ The shuffler can be configured by adding a `config.json` file (an example is pro
 
 #### chatCooldownGlobal
 
-> Global chat cooldown (defaukt: 60000)
+> Global chat cooldown (default: 60000)
 
 #### chatCooldownUser
 
-> User chat cooldown (defaukt: 60000)
+> User chat cooldown (default: 60000)
 
 #### redepmtionRandomText
 
