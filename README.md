@@ -63,7 +63,7 @@ The shuffler can be configured by adding a `config.json` file (an example is pro
 
 #### chatCommand
 
-> Configures the swap chat command (e.g !swap) to respond to (default: ^swap$)
+> Configures the swap chat command (e.g !swap) to respond to. Set to `null` to disable (default: ^swap$)
 
 #### chatListCommand
 
