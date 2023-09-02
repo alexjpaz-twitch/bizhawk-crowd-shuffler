@@ -16,9 +16,14 @@ class TwitchShufflerListener {
     this.chatCommand = props.chatCommand || config.chatCommand;
     this.redemptionName = props.redemptionName || config.redemptionName;
     this.chatListCommand = props.chatListCommand || config.chatListCommand;
+    this.chatSuppressMessages = props.chatSuppressMessages || config.chatSuppressMessages;
   }
 
   async say(text) {
+    if(this.chatSuppressMessages) {
+      return;
+    }
+
     ComfyJS.Say(text);
   }
 

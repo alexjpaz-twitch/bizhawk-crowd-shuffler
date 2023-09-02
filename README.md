@@ -65,6 +65,10 @@ The shuffler can be configured by adding a `config.json` file (an example is pro
 
 > Configures the swap chat command (e.g !swap) to respond to (default: ^swap$)
 
+#### chatSuppressMessages
+
+> Suppresses the chat messages in twitch chat (default: false)
+
 #### chatListCommand
 
 > Configures the list chat command (e.g !list) to respond to (default: ^list$)

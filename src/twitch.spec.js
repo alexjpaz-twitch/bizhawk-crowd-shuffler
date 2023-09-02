@@ -3,9 +3,36 @@ const config = require('./config');
 const { expect } = require('chai');
 const sinon = require('sinon');
 
+const ComfyJS = require("comfy.js");
+
 const { TwitchShufflerListener } = require('./twitch');
 
+const ComfyJSSpy = sinon.spy(ComfyJS, 'Say');
+
 describe('twitch', () => {
+
+  describe('ComfyJS', () => {
+
+    beforeEach(() => {
+      ComfyJSSpy.resetHistory();
+    });
+
+    it('should say using ComfyJS', () => {
+      const listener = new TwitchShufflerListener();
+
+      listener.say("fake_message");
+      expect(ComfyJSSpy.called).to.be.true
+    });
+
+    it('should not say using ComfyJS when suppressed', () => {
+      const listener = new TwitchShufflerListener({
+        chatSuppressMessages: true
+      });
+
+      listener.say("fake_message");
+      expect(ComfyJSSpy.called).to.be.false
+    });
+  });
 
   describe('onCommand', () => {
     let listener;
@@ -229,6 +256,7 @@ describe('twitch', () => {
     });
 
     describe('display message', () => {
+      
       it('user', () => {
         listener.lastCommandTimestamps = {
           'fake_user': new Date().getTime() - 1000,
