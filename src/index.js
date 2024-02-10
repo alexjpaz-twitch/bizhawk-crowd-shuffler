@@ -7,6 +7,7 @@ const logger = console;
 const open = require('open');
 const net = require('net');
 
+const common = require('./common');
 const { RomShuffler } = require('./swap');
 const { TwitchShufflerListener } = require('./twitch')
 
@@ -49,8 +50,9 @@ const startServer = async () => {
     const romName = rom.replace(/\.[a-zA-Z]+$/, '')
 
     twitchShufflerListener.say(`/me Swapping to "${romName}" (${cause})`);
+    message = `switchRom\t${rom}\n`;
     sockets.forEach((sock) => {
-      sock.write(`switchRom\t${rom}\n`);
+      sock.write((message.length - 1) + ' ' + message);
     });
   };
 

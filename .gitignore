@@ -1,6 +1,12 @@
 dist/
 node_modules/
-CurrentRoms/
-!sessions/default/CurrentRoms/DeleteMe
+CurrentROMs/
+CurrentSaves/
+!sessions/default/CurrentROMs/.gitkeep
+!sessions/default/CurrentSaves/.gitkeep
 ./config.json
-*.exe
+config.json
+bizhawk-crowd-shuffler-*
+!bizhawk-crowd-shuffler-win.bat
+!bizhawk-crowd-shuffler-linux.sh
+.env
