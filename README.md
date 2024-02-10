@@ -16,12 +16,13 @@ Note this has only been tested with Bizhawk 2.9.1.
 
 4. Open the `bizhawk-crowd-shuffler` folder and copy any roms that you want shuffled into the `sessions/default/CurrentROMs` folder 
 
-5. Edit the `Start.bat` to fill in the `CHANNEL` with your Twitch channel name.
+5. Edit the `bizhawk-crowd-shuffler-win.bat` (for Windows) or `bizhawk-crowd-shuffler-win.sh` (for Linux) to fill in the `CHANNEL` with your Twitch channel name.
 
 **Note:** You may have a popup saying "Windows protected your PC". Click *more info* and click "Run anyway"
 
 **Note:** You may have a popup about the "Windows Firewall". You will need to allow access for the applications to work.
 
+**Note:** On Linux, you need to manually run `start-bizhawk-listen-to-crowd-shuffler.sh` to start BizHawk.
 
 ## Advanced Setup
 
@@ -53,7 +54,7 @@ channel:manage:redemptions channel:read:redemptions user:read:email chat:edit ch
 
 **Note:** Treat the token like a password and do not share that with anyone.
  
-10. Copy the OAuth token into the `Start.bat` file in the `TWITCH_TOKEN` field
+10. Copy the OAuth token into the `bizhawk-crowd-shuffler-win.bat` (for Windows) or `bizhawk-crowd-shuffler-win.sh` (for Linux) file in the `TWITCH_TOKEN` field
 
 11. Create redemption named "swap"
 
