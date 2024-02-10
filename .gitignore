@@ -6,5 +6,7 @@ CurrentSaves/
 !sessions/default/CurrentSaves/.gitkeep
 ./config.json
 config.json
-*.exe
+bizhawk-crowd-shuffler-*
+!bizhawk-crowd-shuffler-win.bat
+!bizhawk-crowd-shuffler-linux.sh
 .env

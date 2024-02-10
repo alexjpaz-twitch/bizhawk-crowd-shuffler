@@ -17,7 +17,7 @@
   "scripts": {
     "start": "node src/",
     "test": "mocha 'src/*.spec.js'",
-    "package": "pkg -t node14-win-x64 --out-path=./ src/bin/bizhawk-crowd-shuffler"
+    "package": "pkg -t node14-win-x64,node14-linux-x64 --out-path=./ src/bin/bizhawk-crowd-shuffler"
   },
   "keywords": [],
   "author": "",
