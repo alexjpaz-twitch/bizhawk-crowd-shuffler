@@ -51,7 +51,7 @@ local function parseAndExecuteResponse(response)
             args = t[2]
         }
 
-        print("DEBUG: command=" .. input.command)
+        -- print("DEBUG: command=" .. input.command)
 
         local command = commands[input.command]
 
