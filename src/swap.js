@@ -19,7 +19,7 @@ class RomShuffler {
     this.randomOnly = config.randomOnly;
   }
 
-  async fetchCurrentROMs() {
+  async fetchCurrentRoms() {
     let roms = await fs.readdir(`./sessions/${config.session}/CurrentROMs`);
 
     return roms;
@@ -27,7 +27,7 @@ class RomShuffler {
 
   async shuffle(index) {
     try {
-      let roms = await this.fetchCurrentROMs();
+      let roms = await this.fetchCurrentRoms();
 
       if(this.randomOnly) {
         index = null;

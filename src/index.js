@@ -57,7 +57,7 @@ const startServer = async () => {
   };
 
   const list = async () => {
-    let roms = await romShuffler.fetchCurrentROMs();
+    let roms = await romShuffler.fetchCurrentRoms();
 
     let filteredRoms = roms
       .map((rom) => rom.replace(/\.[a-zA-Z]+$/, ''))
