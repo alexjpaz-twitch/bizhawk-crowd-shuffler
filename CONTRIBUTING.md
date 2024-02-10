@@ -37,5 +37,5 @@ npm test
 If the Lua script is run outside of the BizHawk environment the test suite at the bottom will be run
 
 ```
-lua bizhawk-crowd-shuffler.ua
+lua bizhawk-crowd-shuffler.lua
 ```

@@ -14,7 +14,7 @@ describe('swap', () => {
 
     const shuffler = new RomShuffler();
 
-    shuffler.fetchCurrentRoms = sinon.spy(() => [
+    shuffler.fetchCurrentROMs = sinon.spy(() => [
       'Foo.nes',
     ]);
 
@@ -22,14 +22,14 @@ describe('swap', () => {
 
     expect(rom).to.eql('Foo.nes');
 
-    expect(shuffler.fetchCurrentRoms.called).to.eql(true);
+    expect(shuffler.fetchCurrentROMs.called).to.eql(true);
   });
 
   it('should return a rom that is not the current rom', async () => {
 
     const shuffler = new RomShuffler();
 
-    shuffler.fetchCurrentRoms = sinon.spy(() => [
+    shuffler.fetchCurrentROMs = sinon.spy(() => [
       'Foo.nes',
       'Bar.nes'
     ]);
@@ -42,14 +42,14 @@ describe('swap', () => {
 
     expect(rom).not.to.eql('Foo.nes');
 
-    expect(shuffler.fetchCurrentRoms.called).to.eql(true);
+    expect(shuffler.fetchCurrentROMs.called).to.eql(true);
   });
 
   it('should ignore certain files', async () => {
 
     const shuffler = new RomShuffler();
 
-    shuffler.fetchCurrentRoms = sinon.spy(() => [
+    shuffler.fetchCurrentROMs = sinon.spy(() => [
       'Foo.nes',
       'DeleteMe',
     ]);
@@ -58,14 +58,14 @@ describe('swap', () => {
 
     expect(rom).not.to.eql('DeleteMe');
 
-    expect(shuffler.fetchCurrentRoms.called).to.eql(true);
+    expect(shuffler.fetchCurrentROMs.called).to.eql(true);
   });
 
   it('should return a specific rom if it matches a filter value', async () => {
 
     const shuffler = new RomShuffler();
 
-    shuffler.fetchCurrentRoms = sinon.spy(() => [
+    shuffler.fetchCurrentROMs = sinon.spy(() => [
       'Foo.nes',
       'Bar.nes'
     ]);
@@ -79,7 +79,7 @@ describe('swap', () => {
 
     const shuffler = new RomShuffler();
 
-    shuffler.fetchCurrentRoms = sinon.spy(() => [
+    shuffler.fetchCurrentROMs = sinon.spy(() => [
       'Foo.nes',
       'Bar.nes'
     ]);
@@ -93,7 +93,7 @@ describe('swap', () => {
 
     const shuffler = new RomShuffler();
 
-    shuffler.fetchCurrentRoms = sinon.spy(() => [
+    shuffler.fetchCurrentROMs = sinon.spy(() => [
       'Foo.nes',
       'Bar.nes'
     ]);
@@ -107,7 +107,7 @@ describe('swap', () => {
 
     const shuffler = new RomShuffler();
 
-    shuffler.fetchCurrentRoms = sinon.spy(() => [
+    shuffler.fetchCurrentROMs = sinon.spy(() => [
       '1_Foo.nes',
       '2_Bar.nes'
     ]);
@@ -121,7 +121,7 @@ describe('swap', () => {
 
     const shuffler = new RomShuffler();
 
-    shuffler.fetchCurrentRoms = sinon.spy(() => [
+    shuffler.fetchCurrentROMs = sinon.spy(() => [
       '1_Foo.nes',
       '11111_Bar.nes',
       '11_Bar.nes',
@@ -143,7 +143,7 @@ describe('swap', () => {
 
     const shuffler = new RomShuffler();
 
-    shuffler.fetchCurrentRoms = sinon.spy(() => [
+    shuffler.fetchCurrentROMs = sinon.spy(() => [
       '1_Foo.nes',
       '2_Bar.nes'
     ]);
@@ -163,7 +163,7 @@ describe('swap', () => {
       currentRom: '1_Foo.nes'
     };
 
-    shuffler.fetchCurrentRoms = sinon.spy(() => [
+    shuffler.fetchCurrentROMs = sinon.spy(() => [
       '1_Foo.nes',
       '2_Bar.nes'
     ]);
@@ -182,7 +182,7 @@ describe('swap', () => {
       currentRom: '1_Foo.nes'
     };
 
-    shuffler.fetchCurrentRoms = sinon.spy(() => [
+    shuffler.fetchCurrentROMs = sinon.spy(() => [
       '1_Foo.nes',
       '2_Bar.nes'
     ]);
@@ -201,7 +201,7 @@ describe('swap', () => {
       currentRom: '1_Foo.nes'
     };
 
-    shuffler.fetchCurrentRoms = sinon.spy(() => [
+    shuffler.fetchCurrentROMs = sinon.spy(() => [
       '1_Foo.nes',
       '2_Bar.nes'
     ]);
@@ -220,7 +220,7 @@ describe('swap', () => {
       currentRom: '1_Foo.nes'
     };
 
-    shuffler.fetchCurrentRoms = sinon.spy(() => [
+    shuffler.fetchCurrentROMs = sinon.spy(() => [
       '1_Foo.nes',
       '2_Bar.bin',
     ]);
@@ -239,7 +239,7 @@ describe('swap', () => {
       currentRom: '1_Foo.nes'
     };
 
-    shuffler.fetchCurrentRoms = sinon.spy(() => [
+    shuffler.fetchCurrentROMs = sinon.spy(() => [
       '1_Foo.nes',
       '2_Bar.nes'
     ]);
@@ -254,7 +254,7 @@ describe('swap', () => {
     const shuffler = new RomShuffler();
     shuffler.ignoreRomsPattern = "^.bin$";
 
-    shuffler.fetchCurrentRoms = sinon.spy(() => [
+    shuffler.fetchCurrentROMs = sinon.spy(() => [
       '2_Bar.cue',
     ]);
 
@@ -272,7 +272,7 @@ describe('swap', () => {
       currentRom: '1_Foo.nes'
     };
 
-    shuffler.fetchCurrentRoms = sinon.spy(() => [
+    shuffler.fetchCurrentROMs = sinon.spy(() => [
       '1_Foo.nes',
       '2_Bar.nes'
     ]);
@@ -290,7 +290,7 @@ describe('swap', () => {
       currentRom: '1_Foo.nes'
     };
 
-    shuffler.fetchCurrentRoms = sinon.spy(() => [
+    shuffler.fetchCurrentROMs = sinon.spy(() => [
       '1_Foo.nes',
       '2_Bar.nes'
     ]);
@@ -308,7 +308,7 @@ describe('swap', () => {
       currentRom: '1_Foo.nes'
     };
 
-    shuffler.fetchCurrentRoms = sinon.spy(() => [
+    shuffler.fetchCurrentROMs = sinon.spy(() => [
       '1_Foo.nes',
       '2_Bar.nes'
     ]);

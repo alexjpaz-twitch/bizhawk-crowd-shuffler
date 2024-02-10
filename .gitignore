@@ -1,6 +1,10 @@
 dist/
 node_modules/
-CurrentRoms/
-!sessions/default/CurrentRoms/DeleteMe
+CurrentROMs/
+CurrentSaves/
+!sessions/default/CurrentROMs/.gitkeep
+!sessions/default/CurrentSaves/.gitkeep
 ./config.json
+config.json
 *.exe
+.env

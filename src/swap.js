@@ -19,15 +19,15 @@ class RomShuffler {
     this.randomOnly = config.randomOnly;
   }
 
-  async fetchCurrentRoms() {
-    let roms = await fs.readdir(`./sessions/${config.session}/CurrentRoms`);
+  async fetchCurrentROMs() {
+    let roms = await fs.readdir(`./sessions/${config.session}/CurrentROMs`);
 
     return roms;
   }
 
   async shuffle(index) {
     try {
-      let roms = await this.fetchCurrentRoms();
+      let roms = await this.fetchCurrentROMs();
 
       if(this.randomOnly) {
         index = null;
@@ -62,7 +62,8 @@ class RomShuffler {
         roms = roms
           .filter((rom) => rom !== this.state.currentRom)
           .filter(common.filterRomsFromPattern(this.ignoreRomsPattern))
-          .filter((rom) => rom !== 'DeleteMe');
+          .filter((rom) => rom !== 'DeleteMe')
+          .filter((rom) => rom !== '.gitkeep');
       }
 
       let rom = roms[Math.floor(Math.random() * roms.length)];

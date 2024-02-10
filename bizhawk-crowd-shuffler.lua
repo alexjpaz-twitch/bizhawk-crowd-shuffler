@@ -2,8 +2,9 @@ local config = {}
 
 config.sessionPath = os.getenv("session") and os.getenv("session") or 'default'
 
-config.gamePath = ".\\sessions\\" .. config.sessionPath .. "\\CurrentROMs\\"
-config.savePath = ".\\sessions\\" .. config.sessionPath .. "\\CurrentSaves\\"
+local pathseparator = package.config:sub(1,1)
+config.gamePath = "." .. pathseparator .. "sessions" .. pathseparator .. config.sessionPath .. pathseparator .. "CurrentROMs" .. pathseparator
+config.savePath = "." .. pathseparator .. "sessions" .. pathseparator .. config.sessionPath .. pathseparator .. "CurrentSaves" .. pathseparator
 
 local frame = 0
 
@@ -27,7 +28,7 @@ function commands.switchRom(rom)
     local nextGame = rom
 
     client.openrom(config.gamePath .. nextGame)
-    savestate.load(config.savePath ..  nextGame .. ".state")
+    savestate.load(config.savePath .. nextGame .. ".state")
 
     userdata.set("currentGame", nextGame)
 end
@@ -62,12 +63,14 @@ end
 
 local function main()
    -- purge socket data
+   comm.socketServerSetTimeout(12)
    comm.socketServerResponse()
 
    while true do -- The main cycle that causes the emulator to advance and trigger a game switch.
         frame = frame + 1
 
         if (frame % frame_check_mod) == 0 then
+            frame = 0
             local response = comm.socketServerResponse()
 
             if isempty(response) == false then

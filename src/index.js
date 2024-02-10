@@ -7,6 +7,7 @@ const logger = console;
 const open = require('open');
 const net = require('net');
 
+const common = require('./common');
 const { RomShuffler } = require('./swap');
 const { TwitchShufflerListener } = require('./twitch')
 
@@ -49,18 +50,20 @@ const startServer = async () => {
     const romName = rom.replace(/\.[a-zA-Z]+$/, '')
 
     twitchShufflerListener.say(`/me Swapping to "${romName}" (${cause})`);
+    message = `switchRom\t${rom}\n`;
     sockets.forEach((sock) => {
-      sock.write(`switchRom\t${rom}\n`);
+      sock.write((message.length - 1) + ' ' + message);
     });
   };
 
   const list = async () => {
-    let roms = await romShuffler.fetchCurrentRoms();
+    let roms = await romShuffler.fetchCurrentROMs();
 
     let filteredRoms = roms
       .map((rom) => rom.replace(/\.[a-zA-Z]+$/, ''))
       .filter(common.filterRomsFromPattern(this.ignoreRomsPattern))
       .filter((rom) => rom !== 'DeleteMe')
+      .filter((rom) => rom !== '.gitkeep')
     ;
 
     let total = filteredRoms.length;
