@@ -171,9 +171,9 @@ else
 
         commands.switchRom("bar.nes")
 
-        assert(savestate.load__args == config.savePath .. "bar.nes.state")
+        assert(savestate.load__args == config.savePath .. "bar.nes.State")
         assert(userdata.set__value == "bar.nes")
-        assert(savestate.save__args == config.savePath .. "foo.nes.state")
+        assert(savestate.save__args == config.savePath .. "foo.nes.State")
         assert(client.openrom__args == config.gamePath .. "bar.nes")
     end
 
