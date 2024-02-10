@@ -62,8 +62,7 @@ class RomShuffler {
         roms = roms
           .filter((rom) => rom !== this.state.currentRom)
           .filter(common.filterRomsFromPattern(this.ignoreRomsPattern))
-          .filter((rom) => rom !== 'DeleteMe')
-          .filter((rom) => rom !== '.gitkeep');
+          .filter((rom) => rom !== 'DeleteMe');
       }
 
       let rom = roms[Math.floor(Math.random() * roms.length)];

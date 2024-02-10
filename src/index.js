@@ -63,7 +63,6 @@ const startServer = async () => {
       .map((rom) => rom.replace(/\.[a-zA-Z]+$/, ''))
       .filter(common.filterRomsFromPattern(this.ignoreRomsPattern))
       .filter((rom) => rom !== 'DeleteMe')
-      .filter((rom) => rom !== '.gitkeep')
     ;
 
     let total = filteredRoms.length;
