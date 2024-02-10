@@ -22,13 +22,13 @@ function commands.switchRom(rom)
     print("DEBUG: switchRom=" .. rom)
 
     if(currentGame ) then
-       savestate.save(config.savePath .. currentGame  .. ".state")
+       savestate.save(config.savePath .. currentGame  .. ".State")
     end
 
     local nextGame = rom
 
     client.openrom(config.gamePath .. nextGame)
-    savestate.load(config.savePath .. nextGame .. ".state")
+    savestate.load(config.savePath .. nextGame .. ".State")
 
     userdata.set("currentGame", nextGame)
 end
@@ -51,7 +51,7 @@ local function parseAndExecuteResponse(response)
             args = t[2]
         }
 
-        -- print("DEBUG: command=" .. input.command)
+        print("DEBUG: command=" .. input.command)
 
         local command = commands[input.command]
 
@@ -63,7 +63,7 @@ end
 
 local function main()
    -- purge socket data
-   comm.socketServerSetTimeout(12)
+   comm.socketServerSetTimeout(14)
    comm.socketServerResponse()
 
    while true do -- The main cycle that causes the emulator to advance and trigger a game switch.
