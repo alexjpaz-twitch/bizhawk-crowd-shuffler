@@ -3,5 +3,5 @@ SET PORT=7070
 SET CHANNEL=MyTwitchChannel
 SET BIZHAWK_PATH=..\\
 SET TWITCH_TOKEN=
-start bizhawk-crowd-shuffler.exe
+start bizhawk-crowd-shuffler-win.exe
 
