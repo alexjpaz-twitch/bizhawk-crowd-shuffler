@@ -82,6 +82,26 @@ describe('twitch', () => {
       expect(listener.swap.called).to.eql(false);
     });
 
+    it('should NOT swap on onSubGift', () => {
+      listener.swap = sinon.spy();
+
+      listener.onSubGift(
+        "fake_user",
+        "fake_message",
+        100,
+        {
+
+        },
+        {
+          sinceLastCommand: {
+            any: 0
+          }
+        }
+      );
+
+      expect(listener.swap.called).to.eql(false);
+    });
+
   });
 
   describe('onCommand', () => {
@@ -165,6 +185,32 @@ describe('twitch', () => {
         expect(listener.isCoolingDown.called).to.eql(true);
         expect(listener.swap.called).to.eql(true);
         expect(listener.swap.calledWith(null)).to.eql(true);
+      });
+
+      it('should not swap when swapOnChat is false', async () => {
+        listener = new TwitchShufflerListener({
+          swapOnChat: false,
+        });
+
+        listener.swap = sinon.spy();
+
+        listener.isCoolingDown = sinon.spy(() => false);
+
+        await listener.onCommand(
+          "fake_user",
+          "swappy",
+          null,
+          {},
+          {
+            sinceLastCommand: {
+              any: 0
+            }
+          }
+        );
+
+        expect(listener.isCoolingDown.called).to.eql(false);
+        expect(listener.swap.called).to.eql(false);
+        expect(listener.swap.calledWith(null)).to.eql(false);
       });
 
     });
@@ -358,7 +404,7 @@ describe('twitch', () => {
       );
 
       expect(listener.swap.called).to.eql(true);
-      expect(listener.swap.calledWith("fake_message")).to.eql(true);
+      expect(listener.swap.calledWith(null)).to.eql(true);
     });
   });
 
@@ -371,10 +417,10 @@ describe('twitch', () => {
       });
     })
 
-    it('should swap on sub gift', () => {
+    it('should swap on sub gift', async () => {
       listener.swap = sinon.spy();
 
-      listener.onSubGift(
+      await listener.onSubGift(
         "fake_user",
         "fake_message",
         {},
@@ -386,7 +432,7 @@ describe('twitch', () => {
       );
 
       expect(listener.swap.called).to.eql(true);
-      expect(listener.swap.calledWith("fake_message")).to.eql(true);
+      expect(listener.swap.calledWith(null)).to.eql(true);
     });
   });
 
@@ -414,11 +460,11 @@ describe('twitch', () => {
       );
 
       expect(listener.swap.called).to.eql(true);
-      expect(listener.swap.calledWith("fake_message")).to.eql(true);
+      expect(listener.swap.calledWith(null)).to.eql(true);
     });
   });
 
-  describe('onSubGiftContinue', () => {
+  describe('onGiftSubContinue', () => {
     let listener;
 
     beforeEach(() => {
@@ -430,7 +476,7 @@ describe('twitch', () => {
     it('should swap on sub gift continue', () => {
       listener.swap = sinon.spy();
 
-      listener.onSubGiftContinue(
+      listener.onGiftSubContinue(
         "fake_user",
         "fake_message",
         {},
@@ -442,7 +488,7 @@ describe('twitch', () => {
       );
 
       expect(listener.swap.called).to.eql(true);
-      expect(listener.swap.calledWith("fake_message")).to.eql(true);
+      expect(listener.swap.calledWith(null)).to.eql(true);
     });
   });
 
@@ -473,7 +519,7 @@ describe('twitch', () => {
       );
 
       expect(listener.swap.called).to.eql(true);
-      expect(listener.swap.calledWith("fake_message")).to.eql(true);
+      expect(listener.swap.calledWith(null)).to.eql(true);
     });
   });
 

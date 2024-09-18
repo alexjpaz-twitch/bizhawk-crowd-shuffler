@@ -115,31 +115,31 @@ class TwitchShufflerListener {
 
   async onSub( user, message, subTierInfo, extra ) {
     if(this.swapOnSub) {
-      this.swap(message, `${user} via sub`);
+      this.swap(null, `${user} via sub`);
     }
   }
 
   async onResub(user, message, streamMonths, cumulativeMonths, subTierInfo, extra) {
     if (this.swapOnResub) {
-      this.swap(message, `${user} via resub`);
+      this.swap(null, `${user} via resub`);
     }
   }
   
   async onSubGift(gifterUser, streakMonths, recipientUser, senderCount, subTierInfo, extra) {
     if (this.swapOnSubGift) {
-      this.swap(message, `${gifterUser} via gift sub`);
+      this.swap(null, `${gifterUser} via gift sub`);
     }
   }
   
   async onSubMysteryGift(gifterUser, numbOfSubs, senderCount, subTierInfo, extra) {
     if (this.swapOnSubMysteryGift) {
-      this.swap(message, `${gifterUser} via mystery gift sub`);
+      this.swap(null, `${gifterUser} via mystery gift sub`);
     }
   }
   
   async onGiftSubContinue(user, sender, extra) {
     if (this.swapOnGiftSubContinue) {
-      this.swap(message, `${user} via continue gift sub`);
+      this.swap(null, `${user} via continue gift sub`);
     }
   }
 
