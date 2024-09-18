@@ -235,6 +235,198 @@ describe('twitch', () => {
     });
   });
 
+  describe('onCheer', () => {
+    let listener;
+
+    beforeEach(() => {
+      listener = new TwitchShufflerListener({
+        swapOnCheer: true,
+        swapOnCheerMinimumBits: 100
+      });
+    });
+
+    it('should swap on cheer', () => {
+      listener.swap = sinon.spy();
+
+      listener.onCheer(
+        "fake_user",
+        "fake_message",
+        100,
+        {},
+        {
+          sinceLastCommand: {
+            any: 0
+          }
+        }
+      );
+
+      expect(listener.swap.called).to.eql(true);
+      expect(listener.swap.calledWith("fake_message")).to.eql(true);
+    });
+
+    it('should NOT swap on cheer below minimum', () => {
+      listener.swap = sinon.spy();
+
+      listener.onCheer(
+        "fake_user",
+        "fake_message",
+        99,
+        {},
+        {
+          sinceLastCommand: {
+            any: 0
+          }
+        }
+      );
+
+      expect(listener.swap.called).to.eql(false);
+      expect(listener.swap.calledWith("fake_message")).to.eql(false);
+    });
+  });
+
+  describe('onSub', () => {
+    let listener;
+
+    beforeEach(() => {
+      listener = new TwitchShufflerListener({
+        swapOnSub: true
+      });
+    })
+
+    it('should swap on sub', () => {
+      listener.swap = sinon.spy();
+
+      listener.onSub(
+        "fake_user",
+        "fake_message",
+        {},
+        {
+          sinceLastCommand: {
+            any: 0
+          }
+        }
+      );
+
+      expect(listener.swap.called).to.eql(true);
+      expect(listener.swap.calledWith("fake_message")).to.eql(true);
+    });
+  });
+
+  describe('onSubGift', () => {
+    let listener;
+
+    beforeEach(() => {
+      listener = new TwitchShufflerListener({
+        swapOnSubGift: true
+      });
+    })
+
+    it('should swap on sub gift', () => {
+      listener.swap = sinon.spy();
+
+      listener.onSubGift(
+        "fake_user",
+        "fake_message",
+        {},
+        {
+          sinceLastCommand: {
+            any: 0
+          }
+        }
+      );
+
+      expect(listener.swap.called).to.eql(true);
+      expect(listener.swap.calledWith("fake_message")).to.eql(true);
+    });
+  });
+
+  describe('onSubMysteryGift', () => {
+    let listener;
+
+    beforeEach(() => {
+      listener = new TwitchShufflerListener({
+        swapOnSubMysteryGift: true
+      });
+    })
+
+    it('should swap on sub mystery gift', () => {
+      listener.swap = sinon.spy();
+
+      listener.onSubMysteryGift(
+        "fake_user",
+        "fake_message",
+        {},
+        {
+          sinceLastCommand: {
+            any: 0
+          }
+        }
+      );
+
+      expect(listener.swap.called).to.eql(true);
+      expect(listener.swap.calledWith("fake_message")).to.eql(true);
+    });
+  });
+
+  describe('onSubGiftContinue', () => {
+    let listener;
+
+    beforeEach(() => {
+      listener = new TwitchShufflerListener({
+        swapOnGiftSubContinue: true
+      });
+    })
+
+    it('should swap on sub gift continue', () => {
+      listener.swap = sinon.spy();
+
+      listener.onSubGiftContinue(
+        "fake_user",
+        "fake_message",
+        {},
+        {
+          sinceLastCommand: {
+            any: 0
+          }
+        }
+      );
+
+      expect(listener.swap.called).to.eql(true);
+      expect(listener.swap.calledWith("fake_message")).to.eql(true);
+    });
+  });
+
+  describe('onResub', () => {
+
+    let listener;
+
+    beforeEach(() => {
+      listener = new TwitchShufflerListener({
+        swapOnResub: true
+      });
+    });
+
+    it('should swap on resub', () => {
+      listener.swap = sinon.spy();
+
+      listener.onResub(
+        "fake_user",
+        "fake_message",
+        1,
+        1,
+        {},
+        {
+          sinceLastCommand: {
+            any: 0
+          }
+        }
+      );
+
+      expect(listener.swap.called).to.eql(true);
+      expect(listener.swap.calledWith("fake_message")).to.eql(true);
+    });
+  });
+
   describe('cooldown', () => {
     let listener;
 
