@@ -114,7 +114,7 @@ class TwitchShufflerListener {
   }
 
   async onSub( user, message, subTierInfo, extra ) {
-    if(this.this.swapOnSub) {
+    if(this.swapOnSub) {
       this.swap(message, `${user} via sub`);
     }
   }

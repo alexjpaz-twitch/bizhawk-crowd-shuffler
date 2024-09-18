@@ -34,6 +34,56 @@ describe('twitch', () => {
     });
   });
 
+  describe('defaults', () => {
+
+    let listener;
+
+    beforeEach(() => {
+      listener = new TwitchShufflerListener();
+    });
+
+    it('should NOT swap on sub by default', () => {
+      it('should swap on sub gift', () => {
+        listener.swap = sinon.spy();
+  
+        listener.onSubGift(
+          "fake_user",
+          "fake_message",
+          {},
+          {
+            sinceLastCommand: {
+              any: 0
+            }
+          }
+        );
+  
+        expect(listener.swap.called).to.eql(false);
+        expect(listener.swap.calledWith("fake_message")).to.eql(false);
+      });
+    });
+
+    it('should NOT swap on cheer', () => {
+      listener.swap = sinon.spy();
+
+      listener.onCheer(
+        "fake_user",
+        "fake_message",
+        100,
+        {
+
+        },
+        {
+          sinceLastCommand: {
+            any: 0
+          }
+        }
+      );
+
+      expect(listener.swap.called).to.eql(false);
+    });
+
+  });
+
   describe('onCommand', () => {
     let listener;
 
