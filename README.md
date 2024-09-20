@@ -16,7 +16,7 @@ Note this has only been tested with Bizhawk 2.9.1.
 
 4. Open the `bizhawk-crowd-shuffler` folder and copy any roms that you want shuffled into the `sessions/default/CurrentROMs` folder 
 
-5. Edit the `bizhawk-crowd-shuffler-win.bat` (for Windows) or `bizhawk-crowd-shuffler-win.sh` (for Linux) to fill in the `CHANNEL` with your Twitch channel name.
+5. Edit the `bizhawk-crowd-shuffler-win.bat` (for Windows) or `bizhawk-crowd-shuffler-linux.sh` (for Linux) to fill in the `CHANNEL` with your Twitch channel name.
 
 **Note:** You may have a popup saying "Windows protected your PC". Click *more info* and click "Run anyway"
 
