@@ -17,6 +17,17 @@ class TwitchShufflerListener {
     this.redemptionName = props.redemptionName || config.redemptionName;
     this.chatListCommand = props.chatListCommand || config.chatListCommand;
     this.chatSuppressMessages = props.chatSuppressMessages || config.chatSuppressMessages;
+
+    this.swapOnChat = props.swapOnChat || config.swapOnChat;
+    
+    this.swapOnCheer = props.swapOnCheer || config.swapOnCheer;
+    this.swapOnCheerMinimumBits = props.swapOnCheerMinimumBits || config.swapOnCheerMinimumBits;
+
+    this.swapOnSub = props.swapOnSub || config.swapOnSub;
+    this.swapOnResub = props.swapOnResub || config.swapOnResub;
+    this.swapOnSubGift = props.swapOnSubGift || config.swapOnSubGift;
+    this.swapOnSubMysteryGift = props.swapOnSubMysteryGift || config.swapOnSubMysteryGift;
+    this.swapOnGiftSubContinue = props.swapOnGiftSubContinue || config.swapOnGiftSubContinue;
   }
 
   async say(text) {
@@ -96,6 +107,42 @@ class TwitchShufflerListener {
     }
   }
 
+  async onCheer( user, message, bits, flags, extra ) {
+    if(this.swapOnCheer && bits >= this.swapOnCheerMinimumBits) { 
+        this.swap(message, `${user} via reward`);
+    }
+  }
+
+  async onSub( user, message, subTierInfo, extra ) {
+    if(this.swapOnSub) {
+      this.swap(null, `${user} via sub`);
+    }
+  }
+
+  async onResub(user, message, streamMonths, cumulativeMonths, subTierInfo, extra) {
+    if (this.swapOnResub) {
+      this.swap(null, `${user} via resub`);
+    }
+  }
+  
+  async onSubGift(gifterUser, streakMonths, recipientUser, senderCount, subTierInfo, extra) {
+    if (this.swapOnSubGift) {
+      this.swap(null, `${gifterUser} via gift sub`);
+    }
+  }
+  
+  async onSubMysteryGift(gifterUser, numbOfSubs, senderCount, subTierInfo, extra) {
+    if (this.swapOnSubMysteryGift) {
+      this.swap(null, `${gifterUser} via mystery gift sub`);
+    }
+  }
+  
+  async onGiftSubContinue(user, sender, extra) {
+    if (this.swapOnGiftSubContinue) {
+      this.swap(null, `${user} via continue gift sub`);
+    }
+  }
+
   async start() {
 
     if(!config.channel) {
@@ -104,6 +151,14 @@ class TwitchShufflerListener {
     }
     ComfyJS.onCommand = this.onCommand.bind(this);
     ComfyJS.onReward = this.onReward.bind(this);
+
+    ComfyJS.onCheer = this.onCheer.bind(this);
+
+    ComfyJS.onSub = this.onSub.bind(this);
+    ComfyJS.onResub = this.onResub.bind(this);
+    ComfyJS.onSubGift = this.onSubGift.bind(this);
+    ComfyJS.onSubMysteryGift = this.onSubMysteryGift.bind(this);
+    ComfyJS.onGiftSubContinue = this.onGiftSubContinue.bind(this);
 
     logger.info(chalk.blue(`Connecting to twitch channel ${config.channel}`));
 

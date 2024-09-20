@@ -116,6 +116,19 @@ Note: Set this null to disable the timer
 
 > timer maximum
 
+### Twitch Event Configuration
+
+These parameters control when the ROM should be swapped based on different Twitch events:
+
+- `swapOnChat`: Swap when a chat message triggers the swap command (default: `true`)
+- `swapOnCheer`: Swap when someone cheers bits (default: `false`)
+- `swapOnCheerMinimumBits`: Minimum number of bits required to trigger a swap (default: `100`)
+- `swapOnSub`: Swap when someone subscribes (default: `false`)
+- `swapOnResub`: Swap when someone resubscribes (default: `false`)
+- `swapOnSubGift`: Swap when someone gifts a sub (default: `false`)
+- `swapOnSubMysteryGift`: Swap when someone gives mystery gift subs (default: `false`)
+- `swapOnGiftSubContinue`: Swap when someone continues a gifted sub (default: `false`)
+
 
 ## Miscellaneous
 
