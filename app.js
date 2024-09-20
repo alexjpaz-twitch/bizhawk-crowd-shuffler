@@ -27,13 +27,14 @@ document.getElementById('test-button').addEventListener('click', () => {
     displayConfig();
 });
 
-function getScriptPath() {
+function processHandler() {
     const platform = os.platform();
     const scriptsDir = path.join(process.cwd(), 'scripts');
     
     if (platform === 'win32') {
         return path.join(scriptsDir, 'windows_script.bat');
     } else if (platform === 'darwin') {
+        return spawn("/Applications/Aseprite.app/Contents/MacOS/aseprite", []);
         return path.join(scriptsDir, 'macos_script.sh');
     } else {
         return path.join(scriptsDir, 'linux_script.sh');
@@ -46,7 +47,7 @@ function startProcess() {
         return;
     }
 
-    childProcess = spawn("/Applications/Aseprite.app/Contents/MacOS/aseprite", []);
+    childProcess = processHandler();
 
     childProcess.stdout.on('data', (data) => {
         document.getElementById('process-output').innerText += data.toString();
