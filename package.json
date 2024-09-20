@@ -1,0 +1,15 @@
+{
+  "name": "nwjs-config-app",
+  "version": "1.0.0",
+  "main": "index.html",
+  "scripts": {
+    "start": "nw ."
+  },
+  "dependencies": {
+    "nw": "^0.91.0"
+  },
+  "window": {
+    "width": 800,
+    "height": 600
+  }
+}

@@ -1,0 +1,16 @@
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+#config-display {
+    background-color: #f0f0f0;
+    padding: 10px;
+    margin: 10px 0;
+    white-space: pre-wrap;
+}
+
+button {
+    padding: 10px;
+    font-size: 16px;
+}
