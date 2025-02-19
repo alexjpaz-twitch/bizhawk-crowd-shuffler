@@ -129,6 +129,11 @@ These parameters control when the ROM should be swapped based on different Twitc
 - `swapOnSubMysteryGift`: Swap when someone gives mystery gift subs (default: `false`)
 - `swapOnGiftSubContinue`: Swap when someone continues a gifted sub (default: `false`)
 
+## Admin Tasks
+
+### Manually Swapping the Rom
+
+You can manually swap the roms by pressing "s" in the shuffler terminal.
 
 ## Miscellaneous
 
