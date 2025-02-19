@@ -160,7 +160,7 @@ const startServer = async () => {
     // Start listening for keypress events
     const rl = readline.createInterface({
       input: process.stdin,
-      output: process.stdout,
+      output: null,
     });
 
     readline.emitKeypressEvents(process.stdin);
@@ -171,7 +171,7 @@ const startServer = async () => {
     process.stdin.on('keypress', (str, key) => {
       if (key.name === 's') {
         logger.info(chalk.yellow('Keystroke detected: Swapping ROM...'));
-        swap();
+        swap(null, "manual");
       }
       if (key.ctrl && key.name === 'c') {
         process.exit(); // Allow graceful exit
