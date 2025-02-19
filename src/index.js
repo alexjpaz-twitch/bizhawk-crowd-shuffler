@@ -14,6 +14,7 @@ const { TwitchShufflerListener } = require('./twitch')
 const server = net.createServer();
 
 const fs = require('fs').promises;
+const readline = require('readline');
 
 const precondition = (expression, message) => {
   try {
@@ -156,9 +157,30 @@ const startServer = async () => {
       logger.info(chalk.purple(data));
     });
 
+    // Start listening for keypress events
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
     });
 
-}
+    readline.emitKeypressEvents(process.stdin);
+    if (process.stdin.isTTY) {
+      process.stdin.setRawMode(true);
+    }
+
+    process.stdin.on('keypress', (str, key) => {
+      if (key.name === 's') {
+        logger.info(chalk.yellow('Keystroke detected: Swapping ROM...'));
+        swap();
+      }
+      if (key.ctrl && key.name === 'c') {
+        process.exit(); // Allow graceful exit
+      }
+    });
+
+    logger.info(chalk.green('Press "s" to manually swap ROMs.'));
+  });
+};
 
 async function main() {
   try {
